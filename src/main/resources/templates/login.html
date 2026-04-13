@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CreatorBoard - Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="signup-container">
+        <h2>Login</h2>
+
+        <div th:if="${param.error}" style="color: red; text-align: center; margin-bottom: 10px;">
+            ユーザー名かパスワードが違います
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <input type="text" name="username" placeholder="ユーザー名" required>
+            <input type="password" name="password" placeholder="パスワード" required>
+            <button type="submit">Login</button>
+        </form>
+        <p style="text-align: center; font-size: 14px;">
+            <a th:href="@{/signup}">新規登録はこちら</a>
+        </p>
+    </div>
+</body>
+
+</html>

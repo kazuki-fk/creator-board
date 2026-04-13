@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CreatorBoard - ダッシュボード</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <header>
+            <h1>CreatorBoard</h1>
+            <div class="user-info">
+                <span><strong th:text="${username}">User</strong> さん</span>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn-link">ログアウト</button>
+                </form>
+            </div>
+        </header>
+
+        <main>
+            <div class="kanban-header-row">
+                <h2>プロジェクト一覧</h2>
+                <a th:href="@{/projects/new}" class="btn-main" style="width:auto; padding:8px 20px;">
+                    ＋ 新規プロジェクト
+                </a>
+            </div>
+
+            <div class="kanban-board">
+
+                <!-- 未着手 -->
+                <div class="kanban-column">
+                    <div class="kanban-header kanban-todo">未着手</div>
+
+                    <div th:each="project : ${todoProjects}" class="project-kanban-card">
+                        <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
+                            th:text="${project.title}">
+                            プロジェクト名
+                        </a>
+                        <div class="project-card-meta">
+                            <span th:if="${project.genre != null and !project.genre.isEmpty()}"
+                                th:text="'ジャンル：' + ${project.genre}"></span>
+                            <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+                        </div>
+                        <div th:if="${project.phase != null and !project.phase.isEmpty()}">
+                            <span class="phase-badge" th:text="${project.phase}"></span>
+                        </div>
+                        <div class="card-actions">
+                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                                <input type="hidden" name="status" value="進行中">
+                                <button type="submit" class="btn-status">進行中へ →</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(todoProjects)}" class="kanban-empty">プロジェクトなし</div>
+                </div>
+
+                <!-- 進行中 -->
+                <div class="kanban-column">
+                    <div class="kanban-header kanban-doing">進行中</div>
+
+                    <div th:each="project : ${doingProjects}" class="project-kanban-card">
+                        <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
+                            th:text="${project.title}">
+                            プロジェクト名
+                        </a>
+                        <div class="project-card-meta">
+                            <span th:if="${project.genre != null and !project.genre.isEmpty()}"
+                                th:text="'ジャンル：' + ${project.genre}"></span>
+                            <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+                        </div>
+                        <div th:if="${project.phase != null and !project.phase.isEmpty()}">
+                            <span class="phase-badge" th:text="${project.phase}"></span>
+                        </div>
+                        <div class="card-actions">
+                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                                <input type="hidden" name="status" value="完了">
+                                <button type="submit" class="btn-status">完了へ →</button>
+                            </form>
+                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                                <input type="hidden" name="status" value="未着手">
+                                <button type="submit" class="btn-status-back">← 戻す</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(doingProjects)}" class="kanban-empty">プロジェクトなし</div>
+                </div>
+
+                <!-- 完了 -->
+                <div class="kanban-column">
+                    <div class="kanban-header kanban-done">完了</div>
+
+                    <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done">
+                        <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link project-link-done"
+                            th:text="${project.title}">
+                            プロジェクト名
+                        </a>
+                        <div class="project-card-meta">
+                            <span th:if="${project.genre != null and !project.genre.isEmpty()}"
+                                th:text="'ジャンル：' + ${project.genre}"></span>
+                            <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+                        </div>
+                        <div class="card-actions">
+                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                                <input type="hidden" name="status" value="進行中">
+                                <button type="submit" class="btn-status-back">← 戻す</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(doneProjects)}" class="kanban-empty">プロジェクトなし</div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>

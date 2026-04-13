@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CreatorBoard - 新規登録</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="signup-container">
+        <h2>新規ユーザー登録</h2>
+        <form th:action="@{/signup}" method="post">
+            <input type="text" name="username" placeholder="ユーザー名" required>
+            <input type="email" name="email" placeholder="メールアドレス" required>
+            <input type="password" name="password" placeholder="パスワード" required>
+            <button type="submit">登録する</button>
+        </form>
+        <p style="text-align: center; font-size: 14px;">
+            <a th:href="@{/login}">ログインはこちら</a>
+        </p>
+    </div>
+    <div class="signup-error" th:if="${error}">
+        <span th:text="${error}"></span>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,617 @@
+/* ==========================================================================
+   1. 共通設定 (Common / Root)
+   ========================================================================== */
+:root {
+    --bg-dark: #d4d9df;
+    --card-bg: #2b2b2b;
+    --text-main: #000080;
+    /* Deep Blue */
+    --text-sub: #8a8a8a;
+    --accent-color: #ff7c31;
+    /* Ableton Orange */
+    --accent-blue: #00aaff;
+    /* Ableton BPM Blue */
+    --accent-green: #3cb37a;
+    /* Ableton Active Green */
+    --border-color: #121212;
+    --hover-bg: #3e3e3e;
+    --font-sans: "Inter", -apple-system, sans-serif;
+    --font-mono: "Monaco", "Consolas", monospace;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* 共通ボタン & リンク */
+.btn-main {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.btn-main:hover {
+    filter: brightness(1.1);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-link:hover {
+    color: var(--accent-color);
+}
+
+/* ==========================================================================
+   2. ログイン・登録画面用 (Login & Sign Up)
+   ========================================================================== */
+/* signup.html / login.html 共通のコンテナ */
+.signup-container {
+    background: white;
+    padding: 30px;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    margin: 100px auto;
+}
+
+.signup-container h2 {
+    text-align: center;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.signup-container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
+    font-family: var(--font-mono);
+}
+
+.signup-error {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   3. ダッシュボード用 (Dashboard)
+   ========================================================================== */
+.dashboard-wrapper {
+    width: 94%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+}
+
+/* ヘッダーエリア */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    border-bottom: 2px solid var(--border-color);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* プロジェクトグリッドレイアウト */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* 個別プロジェクトカード */
+.project-card {
+    background: var(--card-bg);
+    color: #ffffff;
+    padding: 24px;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-top: 4px solid var(--accent-blue);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.project-card:hover {
+    background-color: var(--hover-bg);
+    transform: translateY(-2px);
+}
+
+.project-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--hover-bg);
+    padding-bottom: 10px;
+}
+
+.project-card p {
+    margin: 8px 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+/* ステータスバッジ */
+.status-badge {
+    background: var(--accent-green);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.7em;
+    font-weight: bold;
+}
+
+/* 新規作成（追加）カード特有のスタイル */
+.add-project {
+    border: 2px dashed var(--text-sub);
+    background: transparent;
+    color: var(--text-sub);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 160px;
+    cursor: pointer;
+}
+
+.add-project:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(255, 124, 49, 0.05);
+    /* ほんのりオレンジ */
+}
+
+.project-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--hover-bg);
+    padding-bottom: 10px;
+}
+
+.project-link:hover {
+    color: var(--accent-color);
+}
+
+
+/* ==========================================================================
+   4. プロジェクトフォーム・詳細画面 (Project Form / Detail)
+   ========================================================================== */
+.form-wrapper {
+    width: 480px;
+    margin: 60px auto;
+    background: white;
+    padding: 36px;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-wrapper h2 {
+    margin: 0 0 24px;
+    font-size: 1.3rem;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--text-sub);
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    background: #fafafa;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    align-items: center;
+}
+
+.btn-cancel {
+    color: var(--text-sub);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 10px;
+}
+
+.btn-cancel:hover {
+    color: var(--text-main);
+}
+
+.btn-delete {
+    padding: 10px 20px;
+    background: transparent;
+    color: #e53935;
+    border: 1px solid #e53935;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background: #e53935;
+    color: white;
+}
+
+/* 詳細画面の各行 */
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.detail-label {
+    color: var(--text-sub);
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   5. タスク管理・カンバンボード (Kanban)
+   ========================================================================== */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.kanban-column {
+    background: white;
+    border-radius: 4px;
+    padding: 16px;
+    min-height: 400px;
+}
+
+.kanban-header {
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+.kanban-todo {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.kanban-doing {
+    background: var(--accent-color);
+    color: white;
+}
+
+.kanban-done {
+    background: var(--accent-green);
+    color: black;
+}
+
+.task-card {
+    background: var(--card-bg);
+    color: white;
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.task-card-done {
+    opacity: 0.6;
+    border-left-color: var(--accent-green);
+}
+
+.task-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+
+.task-title-done {
+    text-decoration: line-through;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.task-due {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-family: var(--font-mono);
+}
+
+.task-project {
+    font-size: 0.75rem;
+    color: var(--accent-blue);
+    margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+
+/* 優先度バッジ */
+.priority-badge {
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 2px;
+}
+
+.priority-high {
+    background: #e53935;
+    color: white;
+}
+
+.priority-medium {
+    background: var(--accent-color);
+    color: white;
+}
+
+.priority-low {
+    background: var(--accent-green);
+    color: black;
+}
+
+/* タスクアクションボタン */
+.task-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.btn-status {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.btn-status:hover {
+    filter: brightness(1.2);
+}
+
+.btn-status-back {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    background: transparent;
+    color: #aaa;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.btn-status-back:hover {
+    color: white;
+    border-color: white;
+}
+
+.btn-task-delete {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    background: transparent;
+    color: #e53935;
+    border: 1px solid #e53935;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-task-delete:hover {
+    background: #e53935;
+    color: white;
+}
+
+/* ==========================================================================
+   6. プロジェクト詳細ページ追加スタイル
+   ========================================================================== */
+.project-info-bar {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: white;
+    padding: 16px 24px;
+    border-radius: 4px;
+    margin: 24px 0 0;
+}
+
+.project-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    font-weight: bold;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-family: var(--font-mono);
+    color: var(--text-main);
+}
+
+.kanban-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 24px 0 0;
+}
+
+.kanban-header-row h2 {
+    margin: 0;
+}
+
+.task-description {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   8. ダッシュボード カンバン（プロジェクト版）
+   ========================================================================== */
+.project-kanban-card {
+    background: var(--card-bg);
+    color: #ffffff;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--accent-blue);
+    transition: background-color 0.2s;
+}
+
+.project-kanban-card:hover {
+    background-color: var(--hover-bg);
+}
+
+.project-kanban-card-done {
+    opacity: 0.6;
+    border-left-color: var(--accent-green);
+}
+
+.project-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 8px 0;
+    font-size: 0.82rem;
+    color: #aaa;
+    font-family: var(--font-mono);
+}
+
+.phase-badge {
+    display: inline-block;
+    background: var(--accent-color);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: bold;
+    padding: 2px 10px;
+    border-radius: 2px;
+    margin: 4px 0 8px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.kanban-empty {
+    text-align: center;
+    color: var(--text-sub);
+    font-size: 0.85rem;
+    padding: 24px 0;
+    border: 1px dashed var(--text-sub);
+    border-radius: 4px;
+}
+
+/* 詳細画面ヘッダー */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.detail-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+/* テキストエリア */
+.form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    background: #fafafa;
+    resize: vertical;
+    transition: border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}

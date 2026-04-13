@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CreatorBoard - 新規プロジェクト</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="form-wrapper">
+        <h2>新規プロジェクト作成</h2>
+        <form th:action="@{/projects/new}" th:object="${project}" method="post">
+            <div class="form-group">
+                <label>プロジェクト名</label>
+                <input type="text" th:field="*{title}" placeholder="例: Summer Demo 2025" required>
+            </div>
+            <div class="form-group">
+                <label>BPM</label>
+                <input type="number" th:field="*{bpm}" placeholder="例: 128" min="60" max="200">
+            </div>
+            <div class="form-group">
+                <label>ジャンル</label>
+                <input type="text" th:field="*{genre}" placeholder="例: House / Lo-fi / Drum'n'Bass">
+            </div>
+
+            <div class="form-group">
+                <label>ステータス</label>
+                <select th:field="*{status}">
+                    <option value="未着手">未着手</option>
+                    <option value="進行中">進行中</option>
+                    <option value="完了">完了</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>作業フェーズ</label>
+                <select th:field="*{phase}">
+                    <option value="">-- 選択しない --</option>
+                    <option value="作曲中">作曲中</option>
+                    <option value="編曲中">編曲中</option>
+                    <option value="レコーディング中">レコーディング中</option>
+                    <option value="ミキシング中">ミキシング中</option>
+                    <option value="マスタリング中">マスタリング中</option>
+                    <option value="リリース準備中">リリース準備中</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-main">作成する</button>
+                <a th:href="@{/}" class="btn-cancel">キャンセル</a>
+            </div>
+        </form>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>
