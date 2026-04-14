@@ -1,5 +1,5 @@
 # CreatorBoard
-
+　※コードはClaude AIに書かせてます。
 > 楽曲制作のすべてを、一つの場所で。
 
 Ableton Live ユーザー向けの楽曲制作管理 Web アプリケーションです。  
