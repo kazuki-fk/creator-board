@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>CreatorBoard - Ableton Analyzer</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
     <div class="dashboard-wrapper">
         <header>
@@ -17,10 +19,7 @@
         <main>
             <!-- アップロードフォーム -->
             <div class="analyzer-upload-section">
-                <form th:action="@{/analyzer/upload}"
-                        method="post"
-                        enctype="multipart/form-data"
-                        class="upload-form">
+                <form th:action="@{/analyzer/upload}" method="post" enctype="multipart/form-data" class="upload-form">
 
                     <div class="upload-zone" id="uploadZone">
                         <div class="upload-icon-large">↑</div>
@@ -28,18 +27,13 @@
                         <label class="btn-upload" for="fileInput">
                             ファイルを選択
                         </label>
-                        <input type="file"
-                                id="fileInput"
-                                name="file"
-                                accept=".als"
-                                style="display:none;"
-                                onchange="showFileName(this)">
+                        <input type="file" id="fileInput" name="file" accept=".als" style="display:none;"
+                            onchange="showFileName(this)">
                         <p class="file-name" id="fileName">ファイルが選択されていません</p>
                     </div>
 
                     <div style="text-align:center; margin-top: 16px;">
-                        <button type="submit" class="btn-main"
-                                style="width:200px;">解析する</button>
+                        <button type="submit" class="btn-main" style="width:200px;">解析する</button>
                     </div>
                 </form>
 
@@ -76,18 +70,33 @@
                     <div th:each="track : ${tracks}" class="track-row">
                         <div class="track-name" th:text="${track.name}">トラック名</div>
                         <div class="track-devices">
-                            <span th:each="device : ${track.devices}"
-                                    class="device-badge"
-                                    th:text="${device}">
+                            <span th:each="device : ${track.devices}" class="device-badge" th:text="${device}">
                             </span>
-                            <span th:if="${#lists.isEmpty(track.devices)}"
-                                    class="no-device">デバイスなし</span>
+                            <span th:if="${#lists.isEmpty(track.devices)}" class="no-device">デバイスなし</span>
                         </div>
                     </div>
                 </div>
+
+                <div class="bpm-apply-section">
+                    <h3>BPM をプロジェクトに反映</h3>
+                    <form th:action="@{/analyzer/apply-bpm}" method="post" class="bpm-apply-form">
+                        <input type="hidden" name="bpm" th:value="${bpm}">
+                        <select name="projectId" class="phase-select" style="width:auto; min-width:200px;">
+                            <option value="">-- プロジェクトを選択 --</option>
+                            <option th:each="project : ${projects}" th:value="${project.id}"
+                                th:text="${project.title} + ' (現在BPM: ' + (${project.bpm != null} ? ${project.bpm} : '未設定') + ')'">
+                            </option>
+                        </select>
+                        <button type="submit" class="btn-main" style="margin-left:10px;">
+                            反映する
+                        </button>
+                    </form>
+                </div>
+
             </div>
         </main>
     </div>
     <script th:src="@{/js/script.js}"></script>
 </body>
+
 </html>

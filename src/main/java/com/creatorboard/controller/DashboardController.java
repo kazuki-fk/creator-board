@@ -51,10 +51,10 @@ public class DashboardController {
                 Map<String, Long> phaseMap = new LinkedHashMap<>();
                 phaseMap.put("作曲中", 0L);
                 phaseMap.put("編曲中", 0L);
-                phaseMap.put("録音中", 0L); // "レコーディング中" → "録音中"
-                phaseMap.put("MIX中", 0L); // "ミキシング中" → "MIX中"
-                phaseMap.put("MAST中", 0L); // "マスタリング中" → "MAST中"
-                phaseMap.put("リリース", 0L); // "リリース準備中" → "リリース"
+                phaseMap.put("レコーディング中", 0L);
+                phaseMap.put("ミキシング中", 0L);
+                phaseMap.put("マスタリング中", 0L);
+                phaseMap.put("リリース準備中", 0L);
 
                 for (Project p : allProjects) {
                         if (p.getPhase() != null && phaseMap.containsKey(p.getPhase())) {
@@ -62,12 +62,22 @@ public class DashboardController {
                         }
                 }
 
+                // グラフ表示用ラベルは短縮版
+                Map<String, String> labelMap = new LinkedHashMap<>();
+                labelMap.put("作曲中", "作曲中");
+                labelMap.put("編曲中", "編曲中");
+                labelMap.put("レコーディング中", "録音中");
+                labelMap.put("ミキシング中", "MIX中");
+                labelMap.put("マスタリング中", "MAST中");
+                labelMap.put("リリース準備中", "リリース");
+
                 StringBuilder labels = new StringBuilder();
                 StringBuilder data = new StringBuilder();
                 for (Map.Entry<String, Long> entry : phaseMap.entrySet()) {
-                        labels.append("'").append(entry.getKey()).append("',");
+                        labels.append("'").append(labelMap.get(entry.getKey())).append("',");
                         data.append(entry.getValue()).append(",");
                 }
+
                 model.addAttribute("phaseLabels", labels.toString());
                 model.addAttribute("phaseData", data.toString());
 

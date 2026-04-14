@@ -67,6 +67,20 @@ public class ProjectController {
         projectRepository.save(project);
         return "redirect:/";
     }
+    
+    // フェーズ更新
+    @PostMapping("/{id}/phase")
+    public String updatePhase(@PathVariable Long id,
+            @RequestParam String phase,
+            Principal principal) {
+        Project project = projectRepository.findById(id).orElseThrow();
+        if (!project.getUser().getUsername().equals(principal.getName())) {
+            return "redirect:/";
+        }
+        project.setPhase(phase);
+        projectRepository.save(project);
+        return "redirect:/";
+    }
 
     // ステータス更新（カンバン列移動）
     @PostMapping("/{id}/status")

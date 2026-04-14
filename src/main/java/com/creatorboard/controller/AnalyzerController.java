@@ -17,6 +17,10 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.creatorboard.entity.Project;
+import com.creatorboard.repository.ProjectRepository;
+import java.util.List;
+
 @Controller
 @RequestMapping("/analyzer")
 public class AnalyzerController {
@@ -30,12 +34,30 @@ public class AnalyzerController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @PostMapping("/apply-bpm")
+    public String applyBpm(@RequestParam Long projectId,
+            @RequestParam Double bpm,
+            Principal principal) {
+        Project project = projectRepository.findById(projectId).orElseThrow();
+        if (!project.getUser().getUsername().equals(principal.getName())) {
+            return "redirect:/analyzer";
+        }
+        project.setBpm(bpm);
+        projectRepository.save(project);
+        return "redirect:/projects/" + projectId;
+    }
+
     @GetMapping
     public String showAnalyzer(Model model, Principal principal) {
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow();
         List<AlsAnalysis> histories = alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user);
+        List<Project> projects = projectRepository.findByUser(user);
         model.addAttribute("histories", histories);
+        model.addAttribute("projects", projects);
         return "analyzer";
     }
 
@@ -53,6 +75,10 @@ public class AnalyzerController {
             return "analyzer";
         }
 
+        // DBに保存
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow();
+
         try {
             String json = analyzerService.analyze(file);
             ObjectMapper mapper = new ObjectMapper();
@@ -60,6 +86,8 @@ public class AnalyzerController {
 
             if (root.has("error")) {
                 model.addAttribute("error", root.get("error").asText());
+                List<Project> projectsOnError = projectRepository.findByUser(user);
+                model.addAttribute("projects", projectsOnError);
                 return "analyzer";
             }
 
@@ -67,7 +95,6 @@ public class AnalyzerController {
             double bpm = Double.parseDouble(bpmStr);
             int trackCount = root.get("tracks").size();
 
-            // デバイス一覧を収集
             List<String> allDevices = new ArrayList<>();
             List<TrackInfo> tracks = new ArrayList<>();
             for (JsonNode track : root.get("tracks")) {
@@ -83,9 +110,6 @@ public class AnalyzerController {
                 tracks.add(new TrackInfo(name, devices));
             }
 
-            // DBに保存
-            User user = userRepository.findByUsername(principal.getName())
-                    .orElseThrow();
             AlsAnalysis analysis = new AlsAnalysis();
             analysis.setUser(user);
             analysis.setFileName(file.getOriginalFilename());
@@ -94,7 +118,6 @@ public class AnalyzerController {
             analysis.setDevicesJson(mapper.writeValueAsString(allDevices));
             alsAnalysisRepository.save(analysis);
 
-            // 画面表示用
             model.addAttribute("projectName", root.get("project_name").asText());
             model.addAttribute("bpm", bpmStr);
             model.addAttribute("tracks", tracks);
@@ -105,6 +128,9 @@ public class AnalyzerController {
             model.addAttribute("error",
                     "解析に失敗しました。Flaskサーバーが起動しているか確認してください。");
         }
+
+        List<Project> projects = projectRepository.findByUser(user);
+        model.addAttribute("projects", projects);
 
         return "analyzer";
     }

@@ -111,9 +111,17 @@
                                 th:text="'ジャンル：' + ${project.genre}"></span>
                             <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
                         </div>
-                        <div th:if="${project.phase != null and !project.phase.isEmpty()}">
-                            <span class="phase-badge" th:text="${project.phase}"></span>
-                        </div>
+                        <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
+                            <select name="phase" class="phase-select" onchange="this.form.submit()">
+                                <option value="">-- フェーズ --</option>
+                                <option value="作曲中" th:selected="${project.phase == '作曲中'}">作曲中</option>
+                                <option value="編曲中" th:selected="${project.phase == '編曲中'}">編曲中</option>
+                                <option value="レコーディング中" th:selected="${project.phase == 'レコーディング中'}">レコーディング中</option>
+                                <option value="ミキシング中" th:selected="${project.phase == 'ミキシング中'}">ミキシング中</option>
+                                <option value="マスタリング中" th:selected="${project.phase == 'マスタリング中'}">マスタリング中</option>
+                                <option value="リリース準備中" th:selected="${project.phase == 'リリース準備中'}">リリース準備中</option>
+                            </select>
+                        </form>
                         <div class="card-actions">
                             <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
                                 <input type="hidden" name="status" value="進行中">
@@ -139,9 +147,17 @@
                                 th:text="'ジャンル：' + ${project.genre}"></span>
                             <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
                         </div>
-                        <div th:if="${project.phase != null and !project.phase.isEmpty()}">
-                            <span class="phase-badge" th:text="${project.phase}"></span>
-                        </div>
+                        <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
+                            <select name="phase" class="phase-select" onchange="this.form.submit()">
+                                <option value="">-- フェーズ --</option>
+                                <option value="作曲中" th:selected="${project.phase == '作曲中'}">作曲中</option>
+                                <option value="編曲中" th:selected="${project.phase == '編曲中'}">編曲中</option>
+                                <option value="レコーディング中" th:selected="${project.phase == 'レコーディング中'}">レコーディング中</option>
+                                <option value="ミキシング中" th:selected="${project.phase == 'ミキシング中'}">ミキシング中</option>
+                                <option value="マスタリング中" th:selected="${project.phase == 'マスタリング中'}">マスタリング中</option>
+                                <option value="リリース準備中" th:selected="${project.phase == 'リリース準備中'}">リリース準備中</option>
+                            </select>
+                        </form>
                         <div class="card-actions">
                             <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
                                 <input type="hidden" name="status" value="完了">
