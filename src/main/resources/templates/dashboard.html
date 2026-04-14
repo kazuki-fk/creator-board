@@ -12,12 +12,6 @@
         <header>
             <h1>CreatorBoard</h1>
             <div class="user-info">
-                <span><strong th:text="${username}">User</strong> さん</span>
-                <form th:action="@{/logout}" method="post" style="display:inline;">
-                    <button type="submit" class="btn-link">ログアウト</button>
-                </form>
-            </div>
-            <div class="user-info">
                 <a th:href="@{/analyzer}" class="btn-link">Analyzer</a>
                 <span><strong th:text="${username}">User</strong> さん</span>
                 <form th:action="@{/logout}" method="post" style="display:inline;">
@@ -27,6 +21,32 @@
         </header>
 
         <main>
+            <div class="summary-grid">
+                <div class="summary-stat-card">
+                    <div class="stat-label">総プロジェクト</div>
+                    <div class="stat-value" th:text="${totalCount}">0</div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-label">未着手</div>
+                    <div class="stat-value" th:text="${todoCount}">0</div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-label">進行中</div>
+                    <div class="stat-value accent-orange" th:text="${doingCount}">0</div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-label">完了</div>
+                    <div class="stat-value accent-green" th:text="${doneCount}">0</div>
+                </div>
+            </div>
+
+            <!-- フェーズ別グラフ -->
+            <div class="chart-section">
+                <h3>フェーズ別プロジェクト数</h3>
+                <div class="chart-wrapper">
+                    <canvas id="phaseChart"></canvas>
+                </div>
+            </div>
             <div class="kanban-header-row">
                 <h2>プロジェクト一覧</h2>
                 <a th:href="@{/projects/new}" class="btn-main" style="width:auto; padding:8px 20px;">
@@ -124,6 +144,44 @@
             </div>
         </main>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script th:inline="javascript">
+        const phaseLabels = /*[[${phaseLabels}]]*/ '';
+        const phaseData = /*[[${phaseData}]]*/ '';
+
+        const labelArray = phaseLabels.split(',').filter(function (l) {
+            return l.replace(/'/g, '').trim() !== '';
+        });
+        const dataArray = phaseData.split(',').filter(function (d) {
+            return d.trim() !== '';
+        }).map(Number);
+
+        new Chart(document.getElementById('phaseChart'), {
+            type: 'bar',
+            data: {
+                labels: labelArray,
+                datasets: [{
+                    label: 'プロジェクト数',
+                    data: dataArray,
+                    backgroundColor: '#ff7c31',
+                    borderRadius: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    </script>
     <script th:src="@{/js/script.js}"></script>
 </body>
 
