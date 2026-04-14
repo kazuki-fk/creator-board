@@ -12,19 +12,18 @@
         <header>
             <h1>CREATORBOARD</h1>
             <div class="user-info">
-                <a th:href="@{/analyzer}"
-                    style="color:var(--text-sub);text-decoration:none;font-size:12px;font-family:monospace;transition:color .2s;"
-                    onmouseover="this.style.color='#ff8906'" onmouseout="this.style.color=''">Ableton Analyzer</a>
-                <span style="color:#333">|</span>
-                <span th:text="${username} + ' さん'">User さん</span>
-                <span style="color:#333">|</span>
-                <form th:action="@{/logout}" method="post" style="display:inline;">
-                    <button type="submit" class="btn-link">ログアウト</button>
-                </form>
+                <button class="nav-analyzer-link" onclick="location.href='/analyzer'">Ableton Analyzer</button>
+                    <span style="color:#333">|</span>
+                    <span th:text="${username} + ' さん'">User さん</span>
+                    <span style="color:#333">|</span>
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button type="submit" class="btn-link">ログアウト</button>
+                    </form>
             </div>
         </header>
 
         <main>
+            <!-- サマリーカード -->
             <div class="summary-grid">
                 <div class="summary-stat-card">
                     <div class="stat-label">総プロジェクト</div>
@@ -51,23 +50,20 @@
                     <canvas id="phaseChart"></canvas>
                 </div>
             </div>
-            <!-- 解析結果サマリー -->
+
+            <!-- Analyzer結果サマリー -->
             <div class="analyzer-dashboard-section">
                 <h3 class="section-label">Ableton Analyzer</h3>
-
                 <div th:if="${hasAnalysis}">
-                    <!-- 最新解析ファイル一覧 -->
                     <div class="analysis-list">
                         <div th:each="a : ${analyses}" class="analysis-row">
                             <span class="analysis-filename" th:text="${a.fileName}">file.als</span>
                             <span class="analysis-bpm" th:text="'BPM ' + ${a.bpm}">BPM 128</span>
                             <span class="analysis-tracks" th:text="${a.trackCount} + ' tracks'">14 tracks</span>
-                            <span class="analysis-date" th:text="${#temporals.format(a.analyzedAt, 'MM/dd HH:mm')}">
-                            </span>
+                            <span class="analysis-date"
+                                th:text="${#temporals.format(a.analyzedAt, 'MM/dd HH:mm')}"></span>
                         </div>
                     </div>
-
-                    <!-- よく使うデバイスTop5 -->
                     <div class="device-ranking" th:if="${!#lists.isEmpty(deviceTop5)}">
                         <p class="device-ranking-label">よく使うデバイス</p>
                         <div class="device-ranking-list">
@@ -78,8 +74,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 解析データなし -->
                 <div th:unless="${hasAnalysis}" class="analyzer-empty">
                     <span>まだ解析されていません</span>
                     <a th:href="@{/analyzer}" class="btn-link" style="margin-left:12px;">
@@ -88,6 +82,33 @@
                 </div>
             </div>
 
+            <!-- 検索・フィルターバー -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="プロジェクト名で検索...">
+                <select id="genreFilter" class="search-select">
+                    <option value="">すべてのジャンル</option>
+                    <option value="House">House</option>
+                    <option value="Lo-fi">Lo-fi</option>
+                    <option value="Techno">Techno</option>
+                    <option value="Pop">Pop</option>
+                    <option value="Hip-hop">Hip-hop</option>
+                    <option value="Drum'n'Bass">Drum'n'Bass</option>
+                    <option value="Ambient">Ambient</option>
+                    <option value="Jazz">Jazz</option>
+                </select>
+                <select id="phaseFilter" class="search-select">
+                    <option value="">すべてのフェーズ</option>
+                    <option value="作曲中">作曲中</option>
+                    <option value="編曲中">編曲中</option>
+                    <option value="レコーディング中">レコーディング中</option>
+                    <option value="ミキシング中">ミキシング中</option>
+                    <option value="マスタリング中">マスタリング中</option>
+                    <option value="リリース準備中">リリース準備中</option>
+                </select>
+                <button onclick="clearFilters()" class="btn-clear">クリア</button>
+            </div>
+
+            <!-- カンバンヘッダー -->
             <div class="kanban-header-row">
                 <h2>プロジェクト一覧</h2>
                 <a th:href="@{/projects/new}" class="btn-main" style="width:auto; padding:8px 20px;">
@@ -95,17 +116,17 @@
                 </a>
             </div>
 
+            <!-- カンバンボード -->
             <div class="kanban-board">
 
                 <!-- 未着手 -->
                 <div class="kanban-column">
                     <div class="kanban-header kanban-todo">未着手</div>
-
-                    <div th:each="project : ${todoProjects}" class="project-kanban-card">
+                    <div th:each="project : ${todoProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
+                                  data-genre=${project.genre != null ? project.genre : ''},
+                                  data-phase=${project.phase != null ? project.phase : ''}">
                         <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
-                            th:text="${project.title}">
-                            プロジェクト名
-                        </a>
+                            th:text="${project.title}">プロジェクト名</a>
                         <div class="project-card-meta">
                             <span th:if="${project.genre != null and !project.genre.isEmpty()}"
                                 th:text="'ジャンル：' + ${project.genre}"></span>
@@ -129,19 +150,17 @@
                             </form>
                         </div>
                     </div>
-
                     <div th:if="${#lists.isEmpty(todoProjects)}" class="kanban-empty">プロジェクトなし</div>
                 </div>
 
                 <!-- 進行中 -->
                 <div class="kanban-column">
                     <div class="kanban-header kanban-doing">進行中</div>
-
-                    <div th:each="project : ${doingProjects}" class="project-kanban-card">
+                    <div th:each="project : ${doingProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
+                                  data-genre=${project.genre != null ? project.genre : ''},
+                                  data-phase=${project.phase != null ? project.phase : ''}">
                         <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
-                            th:text="${project.title}">
-                            プロジェクト名
-                        </a>
+                            th:text="${project.title}">プロジェクト名</a>
                         <div class="project-card-meta">
                             <span th:if="${project.genre != null and !project.genre.isEmpty()}"
                                 th:text="'ジャンル：' + ${project.genre}"></span>
@@ -169,19 +188,18 @@
                             </form>
                         </div>
                     </div>
-
                     <div th:if="${#lists.isEmpty(doingProjects)}" class="kanban-empty">プロジェクトなし</div>
                 </div>
 
                 <!-- 完了 -->
                 <div class="kanban-column">
                     <div class="kanban-header kanban-done">完了</div>
-
-                    <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done">
+                    <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done"
+                        th:attr="data-title=${project.title},
+                                  data-genre=${project.genre != null ? project.genre : ''},
+                                  data-phase=${project.phase != null ? project.phase : ''}">
                         <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link project-link-done"
-                            th:text="${project.title}">
-                            プロジェクト名
-                        </a>
+                            th:text="${project.title}">プロジェクト名</a>
                         <div class="project-card-meta">
                             <span th:if="${project.genre != null and !project.genre.isEmpty()}"
                                 th:text="'ジャンル：' + ${project.genre}"></span>
@@ -194,7 +212,6 @@
                             </form>
                         </div>
                     </div>
-
                     <div th:if="${#lists.isEmpty(doneProjects)}" class="kanban-empty">プロジェクトなし</div>
                 </div>
 

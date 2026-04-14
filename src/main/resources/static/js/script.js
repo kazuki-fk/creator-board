@@ -122,3 +122,59 @@ if (canvas) {
 
     drawWaveform();
 }
+
+// 検索・フィルター機能
+function filterProjects() {
+    var searchVal = document.getElementById('searchInput').value.toLowerCase();
+    var genreVal = document.getElementById('genreFilter').value.toLowerCase();
+    var phaseVal = document.getElementById('phaseFilter').value.toLowerCase();
+
+    var cards = document.querySelectorAll('.project-kanban-card');
+
+    cards.forEach(function (card) {
+        var title = (card.getAttribute('data-title') || '').toLowerCase();
+        var genre = (card.getAttribute('data-genre') || '').toLowerCase();
+        var phase = (card.getAttribute('data-phase') || '').toLowerCase();
+
+        var matchSearch = title.includes(searchVal);
+        var matchGenre = genreVal === '' || genre.includes(genreVal);
+        var matchPhase = phaseVal === '' || phase === phaseVal;
+
+        if (matchSearch && matchGenre && matchPhase) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // 各列の「プロジェクトなし」表示を更新
+    document.querySelectorAll('.kanban-column').forEach(function (col) {
+        var visibleCards = col.querySelectorAll('.project-kanban-card[style="display: block;"], .project-kanban-card:not([style])');
+        var emptyMsg = col.querySelector('.kanban-empty');
+        if (emptyMsg) {
+            var hasVisible = false;
+            col.querySelectorAll('.project-kanban-card').forEach(function (c) {
+                if (c.style.display !== 'none') hasVisible = true;
+            });
+            emptyMsg.style.display = hasVisible ? 'none' : 'block';
+        }
+    });
+}
+
+function clearFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('genreFilter').value = '';
+    document.getElementById('phaseFilter').value = '';
+    filterProjects();
+}
+
+// イベントリスナー登録
+document.addEventListener('DOMContentLoaded', function () {
+    var searchInput = document.getElementById('searchInput');
+    var genreFilter = document.getElementById('genreFilter');
+    var phaseFilter = document.getElementById('phaseFilter');
+
+    if (searchInput) searchInput.addEventListener('input', filterProjects);
+    if (genreFilter) genreFilter.addEventListener('change', filterProjects);
+    if (phaseFilter) phaseFilter.addEventListener('change', filterProjects);
+});

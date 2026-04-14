@@ -393,6 +393,21 @@ body {
     color: var(--border-hover);
 }
 
+.nav-analyzer-link {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: color .2s;
+    padding: 0;
+}
+
+.nav-analyzer-link:hover {
+    color: var(--accent-color);
+}
+
 /* ==========================================================================
    ダッシュボード共通
    ========================================================================== */
@@ -431,6 +446,82 @@ header h1 {
     font-size: 12px;
     color: var(--text-sub);
     font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   検索・フィルターバー
+   ========================================================================== */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 6px 12px;
+    background: var(--bg-mid);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    transition: border-color .2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-select {
+    padding: 6px 12px;
+    background: var(--bg-mid);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+.search-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.search-select option {
+    background: var(--bg-card);
+    color: var(--text-main);
+}
+
+.btn-clear {
+    padding: 6px 14px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+}
+
+.btn-clear:hover {
+    color: var(--text-main);
+    border-color: var(--border-hover);
 }
 
 /* ==========================================================================
