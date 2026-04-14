@@ -8,9 +8,14 @@ import com.creatorboard.repository.ProjectRepository;
 import com.creatorboard.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.*;
@@ -27,25 +32,44 @@ public class DashboardController {
         @Autowired
         private AlsAnalysisRepository alsAnalysisRepository;
 
+        private static final int PAGE_SIZE = 6;
+
         @GetMapping("/")
-        public String showDashboard(Model model, Principal principal) {
+        public String showDashboard(Model model, Principal principal,
+                        @RequestParam(defaultValue = "0") int todoPage,
+                        @RequestParam(defaultValue = "0") int doingPage,
+                        @RequestParam(defaultValue = "0") int donePage) {
+
                 User user = userRepository.findByUsername(principal.getName())
                                 .orElseThrow();
 
-                // プロジェクト
-                List<Project> todoProjects = projectRepository.findByUserAndStatus(user, "未着手");
-                List<Project> doingProjects = projectRepository.findByUserAndStatus(user, "進行中");
-                List<Project> doneProjects = projectRepository.findByUserAndStatus(user, "完了");
+                Pageable todoPageable = PageRequest.of(todoPage, PAGE_SIZE, Sort.by("createdAt").descending());
+                Pageable doingPageable = PageRequest.of(doingPage, PAGE_SIZE, Sort.by("createdAt").descending());
+                Pageable donePageable = PageRequest.of(donePage, PAGE_SIZE, Sort.by("createdAt").descending());
+
+                Page<Project> todoPage_ = projectRepository.findByUserAndStatus(user, "未着手", todoPageable);
+                Page<Project> doingPage_ = projectRepository.findByUserAndStatus(user, "進行中", doingPageable);
+                Page<Project> donePage_ = projectRepository.findByUserAndStatus(user, "完了", donePageable);
+
                 List<Project> allProjects = projectRepository.findByUser(user);
 
                 model.addAttribute("username", user.getUsername());
                 model.addAttribute("totalCount", allProjects.size());
-                model.addAttribute("todoCount", todoProjects.size());
-                model.addAttribute("doingCount", doingProjects.size());
-                model.addAttribute("doneCount", doneProjects.size());
-                model.addAttribute("todoProjects", todoProjects);
-                model.addAttribute("doingProjects", doingProjects);
-                model.addAttribute("doneProjects", doneProjects);
+                model.addAttribute("todoCount", todoPage_.getTotalElements());
+                model.addAttribute("doingCount", doingPage_.getTotalElements());
+                model.addAttribute("doneCount", donePage_.getTotalElements());
+
+                model.addAttribute("todoProjects", todoPage_.getContent());
+                model.addAttribute("doingProjects", doingPage_.getContent());
+                model.addAttribute("doneProjects", donePage_.getContent());
+
+                // ページネーション情報
+                model.addAttribute("todoTotalPages", todoPage_.getTotalPages());
+                model.addAttribute("doingTotalPages", doingPage_.getTotalPages());
+                model.addAttribute("doneTotalPages", donePage_.getTotalPages());
+                model.addAttribute("todoCurrentPage", todoPage);
+                model.addAttribute("doingCurrentPage", doingPage);
+                model.addAttribute("doneCurrentPage", donePage);
 
                 // フェーズ別集計
                 Map<String, Long> phaseMap = new LinkedHashMap<>();
@@ -62,7 +86,6 @@ public class DashboardController {
                         }
                 }
 
-                // グラフ表示用ラベルは短縮版
                 Map<String, String> labelMap = new LinkedHashMap<>();
                 labelMap.put("作曲中", "作曲中");
                 labelMap.put("編曲中", "編曲中");
@@ -77,21 +100,18 @@ public class DashboardController {
                         labels.append("'").append(labelMap.get(entry.getKey())).append("',");
                         data.append(entry.getValue()).append(",");
                 }
-
                 model.addAttribute("phaseLabels", labels.toString());
                 model.addAttribute("phaseData", data.toString());
 
-                // 解析履歴（最新5件）
+                // 解析履歴
                 List<AlsAnalysis> analyses = alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user);
 
-                // よく使うデバイス集計
                 Map<String, Integer> deviceCount = new LinkedHashMap<>();
                 ObjectMapper mapper = new ObjectMapper();
                 for (AlsAnalysis a : analyses) {
                         try {
                                 if (a.getDevicesJson() != null) {
-                                        String[] devices = mapper.readValue(
-                                                        a.getDevicesJson(), String[].class);
+                                        String[] devices = mapper.readValue(a.getDevicesJson(), String[].class);
                                         for (String d : devices) {
                                                 deviceCount.put(d, deviceCount.getOrDefault(d, 0) + 1);
                                         }
@@ -100,7 +120,6 @@ public class DashboardController {
                         }
                 }
 
-                // 件数順にソートしてTop5取得
                 List<Map.Entry<String, Integer>> deviceRanking = new ArrayList<>(deviceCount.entrySet());
                 deviceRanking.sort((a, b) -> b.getValue() - a.getValue());
                 List<Map.Entry<String, Integer>> top5 = deviceRanking.subList(0, Math.min(5, deviceRanking.size()));

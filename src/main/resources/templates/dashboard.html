@@ -13,12 +13,12 @@
             <h1>CREATORBOARD</h1>
             <div class="user-info">
                 <button class="nav-analyzer-link" onclick="location.href='/analyzer'">Ableton Analyzer</button>
-                    <span style="color:#333">|</span>
-                    <span th:text="${username} + ' さん'">User さん</span>
-                    <span style="color:#333">|</span>
-                    <form th:action="@{/logout}" method="post" style="display:inline;">
-                        <button type="submit" class="btn-link">ログアウト</button>
-                    </form>
+                <span style="color:#333">|</span>
+                <span th:text="${username} + ' さん'">User さん</span>
+                <span style="color:#333">|</span>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn-link">ログアウト</button>
+                </form>
             </div>
         </header>
 
@@ -151,6 +151,15 @@
                         </div>
                     </div>
                     <div th:if="${#lists.isEmpty(todoProjects)}" class="kanban-empty">プロジェクトなし</div>
+                    <!-- 未着手ページネーション -->
+                    <div class="pagination" th:if="${todoTotalPages > 1}">
+                        <a th:href="@{/(todoPage=${todoCurrentPage - 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
+                            class="page-btn" th:classappend="${todoCurrentPage == 0} ? 'disabled' : ''">←</a>
+                        <span class="page-info" th:text="${todoCurrentPage + 1} + ' / ' + ${todoTotalPages}"></span>
+                        <a th:href="@{/(todoPage=${todoCurrentPage + 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
+                            class="page-btn"
+                            th:classappend="${todoCurrentPage + 1 >= todoTotalPages} ? 'disabled' : ''">→</a>
+                    </div>
                 </div>
 
                 <!-- 進行中 -->
@@ -189,6 +198,15 @@
                         </div>
                     </div>
                     <div th:if="${#lists.isEmpty(doingProjects)}" class="kanban-empty">プロジェクトなし</div>
+                    <!-- 進行中ページネーション -->
+                    <div class="pagination" th:if="${doingTotalPages > 1}">
+                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage - 1}, donePage=${doneCurrentPage})}"
+                            class="page-btn" th:classappend="${doingCurrentPage == 0} ? 'disabled' : ''">←</a>
+                        <span class="page-info" th:text="${doingCurrentPage + 1} + ' / ' + ${doingTotalPages}"></span>
+                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage + 1}, donePage=${doneCurrentPage})}"
+                            class="page-btn"
+                            th:classappend="${doingCurrentPage + 1 >= doingTotalPages} ? 'disabled' : ''">→</a>
+                    </div>
                 </div>
 
                 <!-- 完了 -->
@@ -213,6 +231,15 @@
                         </div>
                     </div>
                     <div th:if="${#lists.isEmpty(doneProjects)}" class="kanban-empty">プロジェクトなし</div>
+                    <!-- 完了ページネーション -->
+                    <div class="pagination" th:if="${doneTotalPages > 1}">
+                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage - 1})}"
+                            class="page-btn" th:classappend="${doneCurrentPage == 0} ? 'disabled' : ''">←</a>
+                        <span class="page-info" th:text="${doneCurrentPage + 1} + ' / ' + ${doneTotalPages}"></span>
+                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage + 1})}"
+                            class="page-btn"
+                            th:classappend="${doneCurrentPage + 1 >= doneTotalPages} ? 'disabled' : ''">→</a>
+                    </div>
                 </div>
 
             </div>
