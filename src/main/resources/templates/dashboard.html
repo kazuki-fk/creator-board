@@ -17,6 +17,13 @@
                     <button type="submit" class="btn-link">ログアウト</button>
                 </form>
             </div>
+            <div class="user-info">
+                <a th:href="@{/analyzer}" class="btn-link">Analyzer</a>
+                <span><strong th:text="${username}">User</strong> さん</span>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn-link">ログアウト</button>
+                </form>
+            </div>
         </header>
 
         <main>

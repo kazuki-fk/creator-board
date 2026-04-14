@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CreatorBoard - Ableton Analyzer</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <header>
+            <h1>Ableton Analyzer</h1>
+            <div class="user-info">
+                <a th:href="@{/}" class="btn-link">← ダッシュボードへ</a>
+            </div>
+        </header>
+
+        <main>
+            <!-- アップロードフォーム -->
+            <div class="analyzer-upload-section">
+                <form th:action="@{/analyzer/upload}"
+                        method="post"
+                        enctype="multipart/form-data"
+                        class="upload-form">
+
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon-large">↑</div>
+                        <p class="upload-text">.als ファイルをドロップ、または</p>
+                        <label class="btn-upload" for="fileInput">
+                            ファイルを選択
+                        </label>
+                        <input type="file"
+                                id="fileInput"
+                                name="file"
+                                accept=".als"
+                                style="display:none;"
+                                onchange="showFileName(this)">
+                        <p class="file-name" id="fileName">ファイルが選択されていません</p>
+                    </div>
+
+                    <div style="text-align:center; margin-top: 16px;">
+                        <button type="submit" class="btn-main"
+                                style="width:200px;">解析する</button>
+                    </div>
+                </form>
+
+                <!-- エラー表示 -->
+                <div th:if="${error}" class="analyzer-error">
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
+
+            <!-- 解析結果 -->
+            <div th:if="${bpm}" class="analyzer-result">
+
+                <h2>解析結果</h2>
+
+                <!-- サマリーカード -->
+                <div class="analyzer-summary">
+                    <div class="summary-card">
+                        <div class="summary-label">ファイル名</div>
+                        <div class="summary-value" th:text="${projectName}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">BPM</div>
+                        <div class="summary-value accent" th:text="${bpm}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">トラック数</div>
+                        <div class="summary-value" th:text="${tracks.size()}">-</div>
+                    </div>
+                </div>
+
+                <!-- トラック一覧 -->
+                <div class="analyzer-tracks">
+                    <h3>トラック一覧</h3>
+                    <div th:each="track : ${tracks}" class="track-row">
+                        <div class="track-name" th:text="${track.name}">トラック名</div>
+                        <div class="track-devices">
+                            <span th:each="device : ${track.devices}"
+                                    class="device-badge"
+                                    th:text="${device}">
+                            </span>
+                            <span th:if="${#lists.isEmpty(track.devices)}"
+                                    class="no-device">デバイスなし</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

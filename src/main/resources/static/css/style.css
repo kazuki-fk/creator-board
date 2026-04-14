@@ -615,3 +615,170 @@ header h1 {
     outline: none;
     border-color: var(--accent-color);
 }
+
+/* ==========================================================================
+   9. Ableton Analyzer
+   ========================================================================== */
+.analyzer-upload-section {
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.upload-form {
+    width: 100%;
+}
+
+.upload-zone {
+    border: 2px dashed var(--text-sub);
+    border-radius: 4px;
+    padding: 48px 24px;
+    text-align: center;
+    background: white;
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    border-color: var(--accent-color);
+}
+
+.upload-icon-large {
+    font-size: 2.5rem;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+}
+
+.upload-text {
+    color: var(--text-sub);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.btn-upload {
+    display: inline-block;
+    padding: 8px 24px;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-upload:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.file-name {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    font-family: var(--font-mono);
+}
+
+.analyzer-error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #fff0f0;
+    border-left: 3px solid #e53935;
+    border-radius: 2px;
+    color: #e53935;
+    font-size: 0.9rem;
+}
+
+.analyzer-result {
+    margin-top: 40px;
+}
+
+.analyzer-result h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.analyzer-result h3 {
+    font-size: 1rem;
+    margin: 24px 0 12px;
+}
+
+/* サマリーカード */
+.analyzer-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    background: var(--card-bg);
+    color: white;
+    padding: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.summary-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+}
+
+.summary-value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    font-family: var(--font-mono);
+}
+
+.summary-value.accent {
+    color: var(--accent-blue);
+}
+
+/* トラック一覧 */
+.analyzer-tracks {
+    background: white;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.track-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.track-row:last-child {
+    border-bottom: none;
+}
+
+.track-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    min-width: 140px;
+    color: var(--text-main);
+    font-family: var(--font-mono);
+}
+
+.track-devices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.device-badge {
+    background: var(--card-bg);
+    color: var(--accent-blue);
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+}
+
+.no-device {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+}
