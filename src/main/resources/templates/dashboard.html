@@ -10,10 +10,14 @@
 <body>
     <div class="dashboard-wrapper">
         <header>
-            <h1>CreatorBoard</h1>
+            <h1>CREATORBOARD</h1>
             <div class="user-info">
-                <a th:href="@{/analyzer}" class="btn-link">Analyzer</a>
-                <span><strong th:text="${username}">User</strong> さん</span>
+                <a th:href="@{/analyzer}"
+                    style="color:var(--text-sub);text-decoration:none;font-size:12px;font-family:monospace;transition:color .2s;"
+                    onmouseover="this.style.color='#ff8906'" onmouseout="this.style.color=''">Ableton Analyzer</a>
+                <span style="color:#333">|</span>
+                <span th:text="${username} + ' さん'">User さん</span>
+                <span style="color:#333">|</span>
                 <form th:action="@{/logout}" method="post" style="display:inline;">
                     <button type="submit" class="btn-link">ログアウト</button>
                 </form>
@@ -47,6 +51,43 @@
                     <canvas id="phaseChart"></canvas>
                 </div>
             </div>
+            <!-- 解析結果サマリー -->
+            <div class="analyzer-dashboard-section">
+                <h3 class="section-label">Ableton Analyzer</h3>
+
+                <div th:if="${hasAnalysis}">
+                    <!-- 最新解析ファイル一覧 -->
+                    <div class="analysis-list">
+                        <div th:each="a : ${analyses}" class="analysis-row">
+                            <span class="analysis-filename" th:text="${a.fileName}">file.als</span>
+                            <span class="analysis-bpm" th:text="'BPM ' + ${a.bpm}">BPM 128</span>
+                            <span class="analysis-tracks" th:text="${a.trackCount} + ' tracks'">14 tracks</span>
+                            <span class="analysis-date" th:text="${#temporals.format(a.analyzedAt, 'MM/dd HH:mm')}">
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- よく使うデバイスTop5 -->
+                    <div class="device-ranking" th:if="${!#lists.isEmpty(deviceTop5)}">
+                        <p class="device-ranking-label">よく使うデバイス</p>
+                        <div class="device-ranking-list">
+                            <div th:each="entry : ${deviceTop5}" class="device-rank-item">
+                                <span class="device-name" th:text="${entry.key}">Wavetable</span>
+                                <span class="device-count" th:text="${entry.value} + '回'">3回</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 解析データなし -->
+                <div th:unless="${hasAnalysis}" class="analyzer-empty">
+                    <span>まだ解析されていません</span>
+                    <a th:href="@{/analyzer}" class="btn-link" style="margin-left:12px;">
+                        Analyzerへ →
+                    </a>
+                </div>
+            </div>
+
             <div class="kanban-header-row">
                 <h2>プロジェクト一覧</h2>
                 <a th:href="@{/projects/new}" class="btn-main" style="width:auto; padding:8px 20px;">
@@ -152,7 +193,10 @@
 
         const labelArray = phaseLabels.split(',').filter(function (l) {
             return l.replace(/'/g, '').trim() !== '';
+        }).map(function (l) {
+            return l.replace(/'/g, '').trim();
         });
+
         const dataArray = phaseData.split(',').filter(function (d) {
             return d.trim() !== '';
         }).map(Number);
@@ -164,12 +208,15 @@
                 datasets: [{
                     label: 'プロジェクト数',
                     data: dataArray,
-                    backgroundColor: '#ff7c31',
-                    borderRadius: 2
+                    backgroundColor: '#ff8906',
+                    borderRadius: 3,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: { display: false }
                 },
@@ -177,6 +224,12 @@
                     y: {
                         beginAtZero: true,
                         ticks: { stepSize: 1 }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
                     }
                 }
             }

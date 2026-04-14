@@ -1,18 +1,19 @@
 package com.creatorboard.controller;
 
+import com.creatorboard.entity.AlsAnalysis;
 import com.creatorboard.entity.Project;
 import com.creatorboard.entity.User;
+import com.creatorboard.repository.AlsAnalysisRepository;
 import com.creatorboard.repository.ProjectRepository;
 import com.creatorboard.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class DashboardController {
@@ -23,36 +24,37 @@ public class DashboardController {
         @Autowired
         private ProjectRepository projectRepository;
 
+        @Autowired
+        private AlsAnalysisRepository alsAnalysisRepository;
+
         @GetMapping("/")
         public String showDashboard(Model model, Principal principal) {
                 User user = userRepository.findByUsername(principal.getName())
                                 .orElseThrow();
 
+                // プロジェクト
                 List<Project> todoProjects = projectRepository.findByUserAndStatus(user, "未着手");
                 List<Project> doingProjects = projectRepository.findByUserAndStatus(user, "進行中");
                 List<Project> doneProjects = projectRepository.findByUserAndStatus(user, "完了");
                 List<Project> allProjects = projectRepository.findByUser(user);
 
-                // サマリー
+                model.addAttribute("username", user.getUsername());
                 model.addAttribute("totalCount", allProjects.size());
                 model.addAttribute("todoCount", todoProjects.size());
                 model.addAttribute("doingCount", doingProjects.size());
                 model.addAttribute("doneCount", doneProjects.size());
-
-                // カンバン用
                 model.addAttribute("todoProjects", todoProjects);
                 model.addAttribute("doingProjects", doingProjects);
                 model.addAttribute("doneProjects", doneProjects);
-                model.addAttribute("username", user.getUsername());
 
-                // フェーズ別集計（棒グラフ用）
+                // フェーズ別集計
                 Map<String, Long> phaseMap = new LinkedHashMap<>();
                 phaseMap.put("作曲中", 0L);
                 phaseMap.put("編曲中", 0L);
-                phaseMap.put("レコーディング中", 0L);
-                phaseMap.put("ミキシング中", 0L);
-                phaseMap.put("マスタリング中", 0L);
-                phaseMap.put("リリース準備中", 0L);
+                phaseMap.put("録音中", 0L); // "レコーディング中" → "録音中"
+                phaseMap.put("MIX中", 0L); // "ミキシング中" → "MIX中"
+                phaseMap.put("MAST中", 0L); // "マスタリング中" → "MAST中"
+                phaseMap.put("リリース", 0L); // "リリース準備中" → "リリース"
 
                 for (Project p : allProjects) {
                         if (p.getPhase() != null && phaseMap.containsKey(p.getPhase())) {
@@ -60,16 +62,42 @@ public class DashboardController {
                         }
                 }
 
-                // Chart.js用にJSON形式で渡す
                 StringBuilder labels = new StringBuilder();
                 StringBuilder data = new StringBuilder();
                 for (Map.Entry<String, Long> entry : phaseMap.entrySet()) {
                         labels.append("'").append(entry.getKey()).append("',");
                         data.append(entry.getValue()).append(",");
                 }
-
                 model.addAttribute("phaseLabels", labels.toString());
                 model.addAttribute("phaseData", data.toString());
+
+                // 解析履歴（最新5件）
+                List<AlsAnalysis> analyses = alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user);
+
+                // よく使うデバイス集計
+                Map<String, Integer> deviceCount = new LinkedHashMap<>();
+                ObjectMapper mapper = new ObjectMapper();
+                for (AlsAnalysis a : analyses) {
+                        try {
+                                if (a.getDevicesJson() != null) {
+                                        String[] devices = mapper.readValue(
+                                                        a.getDevicesJson(), String[].class);
+                                        for (String d : devices) {
+                                                deviceCount.put(d, deviceCount.getOrDefault(d, 0) + 1);
+                                        }
+                                }
+                        } catch (Exception ignored) {
+                        }
+                }
+
+                // 件数順にソートしてTop5取得
+                List<Map.Entry<String, Integer>> deviceRanking = new ArrayList<>(deviceCount.entrySet());
+                deviceRanking.sort((a, b) -> b.getValue() - a.getValue());
+                List<Map.Entry<String, Integer>> top5 = deviceRanking.subList(0, Math.min(5, deviceRanking.size()));
+
+                model.addAttribute("analyses", analyses.subList(0, Math.min(5, analyses.size())));
+                model.addAttribute("deviceTop5", top5);
+                model.addAttribute("hasAnalysis", !analyses.isEmpty());
 
                 return "dashboard";
         }

@@ -3,27 +3,80 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>CreatorBoard - Login</title>
+    <title>CreatorBoard</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
-    <div class="signup-container">
-        <h2>Login</h2>
+<body class="login-body">
 
-        <div th:if="${param.error}" style="color: red; text-align: center; margin-bottom: 10px;">
-            ユーザー名かパスワードが違います
+    <div class="login-wrapper">
+
+        <!-- 左側：ヒーローエリア -->
+        <div class="login-hero">
+            <div class="login-hero-content">
+                <div class="login-logo">CreatorBoard</div>
+                <h1 class="login-headline">
+                    <span id="typed-text"></span>
+                    <span class="cursor">|</span>
+                </h1>
+                <p class="login-sub">
+                    楽曲制作のすべてを、一つの場所で。<br>
+                    プロジェクト管理から Ableton 解析まで。
+                </p>
+                <div class="login-features">
+                    <div class="feature-item">
+                        <span class="feature-dot"></span>
+                        プロジェクトのカンバン管理
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-dot"></span>
+                        .als ファイルの自動解析
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-dot"></span>
+                        制作傾向のビジュアライズ
+                    </div>
+                </div>
+            </div>
+            <!-- 背景グリッドアニメーション -->
+            <div class="grid-overlay"></div>
+            <canvas id="waveCanvas" class="wave-canvas"></canvas>
         </div>
 
-        <form th:action="@{/login}" method="post">
-            <input type="text" name="username" placeholder="ユーザー名" required>
-            <input type="password" name="password" placeholder="パスワード" required>
-            <button type="submit">Login</button>
-        </form>
-        <p style="text-align: center; font-size: 14px;">
-            <a th:href="@{/signup}">新規登録はこちら</a>
-        </p>
+        <!-- 右側：ログインフォーム -->
+        <div class="login-form-area">
+            <div class="login-form-box">
+                <h2>ログイン</h2>
+
+                <div th:if="${param.error}" class="login-error">
+                    ユーザー名またはパスワードが違います
+                </div>
+
+                <form th:action="@{/login}" method="post">
+                    <div class="login-form-group">
+                        <label>ユーザー名</label>
+                        <input type="text" name="username" placeholder="username" required autocomplete="username">
+                    </div>
+                    <div class="login-form-group">
+                        <label>パスワード</label>
+                        <input type="password" name="password" placeholder="••••••••" required
+                            autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="login-btn">
+                        ログイン
+                    </button>
+                </form>
+
+                <div class="login-signup-link">
+                    アカウントをお持ちでない方は
+                    <a th:href="@{/signup}">新規登録</a>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <script th:src="@{/js/script.js}"></script>
 </body>
 
 </html>

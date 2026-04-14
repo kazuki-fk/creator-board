@@ -1,5 +1,9 @@
 package com.creatorboard.controller;
 
+import com.creatorboard.entity.AlsAnalysis;
+import com.creatorboard.entity.User;
+import com.creatorboard.repository.AlsAnalysisRepository;
+import com.creatorboard.repository.UserRepository;
 import com.creatorboard.service.AnalyzerService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,23 +24,30 @@ public class AnalyzerController {
     @Autowired
     private AnalyzerService analyzerService;
 
-    // Analyzer画面表示
+    @Autowired
+    private AlsAnalysisRepository alsAnalysisRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
-    public String showAnalyzer() {
+    public String showAnalyzer(Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow();
+        List<AlsAnalysis> histories = alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user);
+        model.addAttribute("histories", histories);
         return "analyzer";
     }
 
-    // ファイルアップロード・解析
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file,
-            Model model) {
-        // ファイル未選択チェック
+            Model model,
+            Principal principal) {
         if (file.isEmpty()) {
             model.addAttribute("error", "ファイルを選択してください");
             return "analyzer";
         }
 
-        // .als以外のファイルチェック
         if (!file.getOriginalFilename().endsWith(".als")) {
             model.addAttribute("error", ".alsファイルのみアップロードできます");
             return "analyzer";
@@ -46,29 +58,48 @@ public class AnalyzerController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(json);
 
-            // エラーチェック
             if (root.has("error")) {
                 model.addAttribute("error", root.get("error").asText());
                 return "analyzer";
             }
 
-            // 解析結果をModelに格納
-            model.addAttribute("projectName",
-                    root.get("project_name").asText());
-            model.addAttribute("bpm",
-                    root.get("bpm").asText());
+            String bpmStr = root.get("bpm").asText();
+            double bpm = Double.parseDouble(bpmStr);
+            int trackCount = root.get("tracks").size();
 
-            // トラック一覧を整形
+            // デバイス一覧を収集
+            List<String> allDevices = new ArrayList<>();
             List<TrackInfo> tracks = new ArrayList<>();
             for (JsonNode track : root.get("tracks")) {
                 String name = track.get("name").asText();
                 List<String> devices = new ArrayList<>();
                 for (JsonNode device : track.get("devices")) {
-                    devices.add(device.asText());
+                    String d = device.asText();
+                    devices.add(d);
+                    if (!allDevices.contains(d)) {
+                        allDevices.add(d);
+                    }
                 }
                 tracks.add(new TrackInfo(name, devices));
             }
+
+            // DBに保存
+            User user = userRepository.findByUsername(principal.getName())
+                    .orElseThrow();
+            AlsAnalysis analysis = new AlsAnalysis();
+            analysis.setUser(user);
+            analysis.setFileName(file.getOriginalFilename());
+            analysis.setBpm(bpm);
+            analysis.setTrackCount(trackCount);
+            analysis.setDevicesJson(mapper.writeValueAsString(allDevices));
+            alsAnalysisRepository.save(analysis);
+
+            // 画面表示用
+            model.addAttribute("projectName", root.get("project_name").asText());
+            model.addAttribute("bpm", bpmStr);
             model.addAttribute("tracks", tracks);
+            model.addAttribute("histories",
+                    alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user));
 
         } catch (Exception e) {
             model.addAttribute("error",
@@ -78,7 +109,6 @@ public class AnalyzerController {
         return "analyzer";
     }
 
-    // トラック情報を保持するインナークラス
     public static class TrackInfo {
         private String name;
         private List<String> devices;
