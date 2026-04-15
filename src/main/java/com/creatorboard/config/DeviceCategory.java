@@ -24,7 +24,9 @@ public class DeviceCategory {
         "Vinyl Distortion",
         "Dynamic Tube",
         "Gate",
-        "Expander"
+        "Expander",
+        "Limiter"
+        
     );
 
     // オーディオエフェクト系
@@ -48,7 +50,10 @@ public class DeviceCategory {
         "Beat Repeat",
         "Looper",
         "Utility",
-        "Stereo Enhancer"
+        "Stereo Enhancer",
+        "Roar",
+        "Hybrid Reverb",
+        "Vocoder"
     );
 
     // インストゥルメント系（上記以外はすべてここに分類）
@@ -65,7 +70,8 @@ public class DeviceCategory {
         "Tension",
         "Collision",
         "Instrument Rack",
-        "External Instrument"
+        "External Instrument",
+        "Granulator III"
     );
 
     public static String classify(String deviceName) {
