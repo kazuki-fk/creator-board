@@ -1,6 +1,7 @@
 package com.creatorboard.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -14,6 +15,8 @@ public class Project {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "プロジェクト名は必須です")
+    @Size(max = 50, message = "プロジェクト名は50文字以内で入力してください")
     private String title;
 
     private Double bpm;
@@ -21,9 +24,9 @@ public class Project {
     private String genre;
 
     @Column(nullable = false)
-    private String status; // 未着手 / 進行中 / 完了
+    private String status;
 
-    private String phase; // 作曲中 / 編曲中 / ミキシング中 など
+    private String phase;
 
     @Column(columnDefinition = "TEXT")
     private String memo;

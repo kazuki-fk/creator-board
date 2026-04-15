@@ -8,10 +8,7 @@
 </head>
 
 <body class="login-body">
-
     <div class="login-wrapper">
-
-        <!-- 左側：ヒーローエリア -->
         <div class="login-hero">
             <div class="login-hero-content">
                 <div class="login-logo">CreatorBoard</div>
@@ -41,7 +38,6 @@
             <canvas id="waveCanvas" class="wave-canvas"></canvas>
         </div>
 
-        <!-- 右側：登録フォーム -->
         <div class="login-form-area">
             <div class="login-form-box">
                 <h2>新規登録</h2>
@@ -50,19 +46,28 @@
                     <span th:text="${error}"></span>
                 </div>
 
-                <form th:action="@{/signup}" method="post">
+                <form th:action="@{/signup}" th:object="${user}" method="post">
+
                     <div class="login-form-group">
                         <label>ユーザー名</label>
-                        <input type="text" name="username" placeholder="username" required>
+                        <input type="text" th:field="*{username}" placeholder="3〜20文字">
+                        <span class="field-error" th:if="${#fields.hasErrors('username')}"
+                            th:errors="*{username}"></span>
                     </div>
+
                     <div class="login-form-group">
                         <label>メールアドレス</label>
-                        <input type="email" name="email" placeholder="you@example.com" required>
+                        <input type="email" th:field="*{email}" placeholder="you@example.com">
+                        <span class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                     </div>
+
                     <div class="login-form-group">
                         <label>パスワード</label>
-                        <input type="password" name="password" placeholder="••••••••" required>
+                        <input type="password" th:field="*{password}" placeholder="8文字以上">
+                        <span class="field-error" th:if="${#fields.hasErrors('password')}"
+                            th:errors="*{password}"></span>
                     </div>
+
                     <button type="submit" class="login-btn">
                         アカウントを作成
                     </button>
@@ -74,9 +79,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
     <script th:src="@{/js/script.js}"></script>
 </body>
 

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
@@ -30,7 +33,12 @@ public class ProjectController {
 
     // 新規作成保存
     @PostMapping("/new")
-    public String createProject(@ModelAttribute Project project, Principal principal) {
+    public String createProject(@Valid @ModelAttribute Project project,
+            BindingResult result,
+            Principal principal) {
+        if (result.hasErrors()) {
+            return "project-form";
+        }
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow();
         project.setUser(user);
@@ -52,8 +60,12 @@ public class ProjectController {
     // 編集保存
     @PostMapping("/{id}/edit")
     public String editProject(@PathVariable Long id,
-            @ModelAttribute Project form,
+            @Valid @ModelAttribute Project form,
+            BindingResult result,
             Principal principal) {
+        if (result.hasErrors()) {
+            return "project-detail";
+        }
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
             return "redirect:/";
@@ -67,7 +79,7 @@ public class ProjectController {
         projectRepository.save(project);
         return "redirect:/";
     }
-    
+
     // フェーズ更新
     @PostMapping("/{id}/phase")
     public String updatePhase(@PathVariable Long id,
