@@ -1,5 +1,6 @@
 package com.creatorboard.controller;
 
+import com.creatorboard.config.DeviceCategory;
 import com.creatorboard.entity.AlsAnalysis;
 import com.creatorboard.entity.Project;
 import com.creatorboard.entity.User;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 import java.security.Principal;
 import java.util.*;
@@ -106,28 +109,53 @@ public class DashboardController {
                 // 解析履歴
                 List<AlsAnalysis> analyses = alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user);
 
-                Map<String, Integer> deviceCount = new LinkedHashMap<>();
+                Map<String, Integer> drumCount = new LinkedHashMap<>();
+                Map<String, Integer> mixingCount = new LinkedHashMap<>();
+                Map<String, Integer> fxCount = new LinkedHashMap<>();
+                Map<String, Integer> instrumentCount = new LinkedHashMap<>();
+                // カテゴリ別デバイス集計
+
                 ObjectMapper mapper = new ObjectMapper();
                 for (AlsAnalysis a : analyses) {
                         try {
                                 if (a.getDevicesJson() != null) {
                                         String[] devices = mapper.readValue(a.getDevicesJson(), String[].class);
                                         for (String d : devices) {
-                                                deviceCount.put(d, deviceCount.getOrDefault(d, 0) + 1);
+                                                String category = DeviceCategory.classify(d);
+                                                switch (category) {
+                                                        case "drum":
+                                                                drumCount.put(d, drumCount.getOrDefault(d, 0) + 1);
+                                                                break;
+                                                        case "mixing":
+                                                                mixingCount.put(d, mixingCount.getOrDefault(d, 0) + 1);
+                                                                break;
+                                                        case "fx":
+                                                                fxCount.put(d, fxCount.getOrDefault(d, 0) + 1);
+                                                                break;
+                                                        default:
+                                                                instrumentCount.put(d,
+                                                                                instrumentCount.getOrDefault(d, 0) + 1);
+                                                                break;
+                                                }
                                         }
                                 }
                         } catch (Exception ignored) {
                         }
                 }
 
-                List<Map.Entry<String, Integer>> deviceRanking = new ArrayList<>(deviceCount.entrySet());
-                deviceRanking.sort((a, b) -> b.getValue() - a.getValue());
-                List<Map.Entry<String, Integer>> top5 = deviceRanking.subList(0, Math.min(5, deviceRanking.size()));
-
                 model.addAttribute("analyses", analyses.subList(0, Math.min(5, analyses.size())));
-                model.addAttribute("deviceTop5", top5);
+                model.addAttribute("drumTop5", sortTop5(drumCount));
+                model.addAttribute("mixingTop5", sortTop5(mixingCount));
+                model.addAttribute("fxTop5", sortTop5(fxCount));
+                model.addAttribute("instrumentTop5", sortTop5(instrumentCount));
                 model.addAttribute("hasAnalysis", !analyses.isEmpty());
 
                 return "dashboard";
+        }
+
+        private List<Map.Entry<String, Integer>> sortTop5(Map<String, Integer> map) {
+                List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
+                list.sort((a, b) -> b.getValue() - a.getValue());
+                return list.subList(0, Math.min(5, list.size()));
         }
 }

@@ -66,15 +66,60 @@
                                 th:text="${#temporals.format(a.analyzedAt, 'MM/dd HH:mm')}"></span>
                     </div>
                 </div>
-                <div class="device-ranking" th:if="${!#lists.isEmpty(deviceTop5)}">
-                    <p class="device-ranking-label">よく使うデバイス</p>
-                    <div class="device-ranking-list">
-                        <div th:each="entry : ${deviceTop5}" class="device-rank-item">
-                            <span class="device-name" th:text="${entry.key}">Wavetable</span>
-                            <span class="device-count" th:text="${entry.value} + '回'">3回</span>
+
+
+                <!-- よく使うデバイス（カテゴリ別） -->
+                <div th:if="${hasAnalysis}">
+                    <div class="device-category-section">
+
+                        <!-- インストゥルメント -->
+                        <div th:if="${!#lists.isEmpty(instrumentTop5)}" class="device-category">
+                            <p class="device-category-label">インストゥルメント</p>
+                            <div class="device-ranking-list">
+                                <div th:each="entry : ${instrumentTop5}" class="device-rank-item">
+                                    <span class="device-name" th:text="${entry.key}"></span>
+                                    <span class="device-count" th:text="${entry.value} + '回'"></span>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- オーディオエフェクト -->
+                        <div th:if="${!#lists.isEmpty(fxTop5)}" class="device-category">
+                            <p class="device-category-label">オーディオエフェクト</p>
+                            <div class="device-ranking-list">
+                                <div th:each="entry : ${fxTop5}" class="device-rank-item">
+                                    <span class="device-name" th:text="${entry.key}"></span>
+                                    <span class="device-count" th:text="${entry.value} + '回'"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ミキシング・マスタリング -->
+                        <div th:if="${!#lists.isEmpty(mixingTop5)}" class="device-category">
+                            <p class="device-category-label">ミキシング・マスタリング</p>
+                            <div class="device-ranking-list">
+                                <div th:each="entry : ${mixingTop5}" class="device-rank-item">
+                                    <span class="device-name" th:text="${entry.key}"></span>
+                                    <span class="device-count" th:text="${entry.value} + '回'"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ドラム・リズム -->
+                        <div th:if="${!#lists.isEmpty(drumTop5)}" class="device-category">
+                            <p class="device-category-label">ドラム・リズム</p>
+                            <div class="device-ranking-list">
+                                <div th:each="entry : ${drumTop5}" class="device-rank-item">
+                                    <span class="device-name" th:text="${entry.key}"></span>
+                                    <span class="device-count" th:text="${entry.value} + '回'"></span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+
+
             </div>
             <div th:unless="${hasAnalysis}" class="analyzer-empty">
                 <span>まだ解析されていません</span>

@@ -455,6 +455,32 @@ header h1 {
     font-family: var(--font-mono);
 }
 
+.device-category-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.device-category {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.device-category:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.device-category-label {
+    font-size: 10px;
+    color: var(--accent-color);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+}
+
 /* ==========================================================================
    ページネーション
    ========================================================================== */
