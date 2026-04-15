@@ -57,194 +57,191 @@
                 <h3 class="section-label">Ableton Analyzer</h3>
                 <div th:if="${hasAnalysis}">
                     <div class="analysis-list">
-                        <div th:each="a : ${analyses}" class="analysis-row">
+                        <a th:each="a : ${analyses}" th:href="@{/analyzer/{id}(id=${a.id})}"
+                            class="analysis-row analysis-row-link">
                             <span class="analysis-filename" th:text="${a.fileName}">file.als</span>
                             <span class="analysis-bpm" th:text="'BPM ' + ${a.bpm}">BPM 128</span>
                             <span class="analysis-tracks" th:text="${a.trackCount} + ' tracks'">14 tracks</span>
                             <span class="analysis-date"
                                 th:text="${#temporals.format(a.analyzedAt, 'MM/dd HH:mm')}"></span>
-                        </div>
                     </div>
-                    <div class="device-ranking" th:if="${!#lists.isEmpty(deviceTop5)}">
-                        <p class="device-ranking-label">よく使うデバイス</p>
-                        <div class="device-ranking-list">
-                            <div th:each="entry : ${deviceTop5}" class="device-rank-item">
-                                <span class="device-name" th:text="${entry.key}">Wavetable</span>
-                                <span class="device-count" th:text="${entry.value} + '回'">3回</span>
-                            </div>
+                </div>
+                <div class="device-ranking" th:if="${!#lists.isEmpty(deviceTop5)}">
+                    <p class="device-ranking-label">よく使うデバイス</p>
+                    <div class="device-ranking-list">
+                        <div th:each="entry : ${deviceTop5}" class="device-rank-item">
+                            <span class="device-name" th:text="${entry.key}">Wavetable</span>
+                            <span class="device-count" th:text="${entry.value} + '回'">3回</span>
                         </div>
                     </div>
                 </div>
-                <div th:unless="${hasAnalysis}" class="analyzer-empty">
-                    <span>まだ解析されていません</span>
-                    <a th:href="@{/analyzer}" class="btn-link" style="margin-left:12px;">
-                        Analyzerへ →
-                    </a>
-                </div>
             </div>
-
-            <!-- 検索・フィルターバー -->
-            <div class="search-bar">
-                <input type="text" id="searchInput" class="search-input" placeholder="プロジェクト名で検索...">
-                <select id="genreFilter" class="search-select">
-                    <option value="">すべてのジャンル</option>
-                    <option value="House">House</option>
-                    <option value="Lo-fi">Lo-fi</option>
-                    <option value="Techno">Techno</option>
-                    <option value="Pop">Pop</option>
-                    <option value="Hip-hop">Hip-hop</option>
-                    <option value="Drum'n'Bass">Drum'n'Bass</option>
-                    <option value="Ambient">Ambient</option>
-                    <option value="Jazz">Jazz</option>
-                </select>
-                <select id="phaseFilter" class="search-select">
-                    <option value="">すべてのフェーズ</option>
-                    <option value="作曲中">作曲中</option>
-                    <option value="編曲中">編曲中</option>
-                    <option value="レコーディング中">レコーディング中</option>
-                    <option value="ミキシング中">ミキシング中</option>
-                    <option value="マスタリング中">マスタリング中</option>
-                    <option value="リリース準備中">リリース準備中</option>
-                </select>
-                <button onclick="clearFilters()" class="btn-clear">クリア</button>
-            </div>
-
-            <!-- カンバンヘッダー -->
-            <div class="kanban-header-row">
-                <h2>プロジェクト一覧</h2>
-                <a th:href="@{/projects/new}" class="btn-main" style="width:auto; padding:8px 20px;">
-                    ＋ 新規プロジェクト
+            <div th:unless="${hasAnalysis}" class="analyzer-empty">
+                <span>まだ解析されていません</span>
+                <a th:href="@{/analyzer}" class="btn-link" style="margin-left:12px;">
+                    Analyzerへ →
                 </a>
             </div>
+    </div>
 
-            <!-- カンバンボード -->
-            <div class="kanban-board">
+    <!-- 検索・フィルターバー -->
+    <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="プロジェクト名で検索...">
+        <select id="genreFilter" class="search-select">
+            <option value="">すべてのジャンル</option>
+            <option value="House">House</option>
+            <option value="Lo-fi">Lo-fi</option>
+            <option value="Techno">Techno</option>
+            <option value="Pop">Pop</option>
+            <option value="Hip-hop">Hip-hop</option>
+            <option value="Drum'n'Bass">Drum'n'Bass</option>
+            <option value="Ambient">Ambient</option>
+            <option value="Jazz">Jazz</option>
+        </select>
+        <select id="phaseFilter" class="search-select">
+            <option value="">すべてのフェーズ</option>
+            <option value="作曲中">作曲中</option>
+            <option value="編曲中">編曲中</option>
+            <option value="レコーディング中">レコーディング中</option>
+            <option value="ミキシング中">ミキシング中</option>
+            <option value="マスタリング中">マスタリング中</option>
+            <option value="リリース準備中">リリース準備中</option>
+        </select>
+        <button onclick="clearFilters()" class="btn-clear">クリア</button>
+    </div>
 
-                <!-- 未着手 -->
-                <div class="kanban-column">
-                    <div class="kanban-header kanban-todo">未着手</div>
-                    <div th:each="project : ${todoProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
+    <!-- カンバンヘッダー -->
+    <div class="kanban-header-row">
+        <h2>プロジェクト一覧</h2>
+        <a th:href="@{/projects/new}" class="btn-main" style="width:auto; padding:8px 20px;">
+            ＋ 新規プロジェクト
+        </a>
+    </div>
+
+    <!-- カンバンボード -->
+    <div class="kanban-board">
+
+        <!-- 未着手 -->
+        <div class="kanban-column">
+            <div class="kanban-header kanban-todo">未着手</div>
+            <div th:each="project : ${todoProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
                                   data-genre=${project.genre != null ? project.genre : ''},
                                   data-phase=${project.phase != null ? project.phase : ''}">
-                        <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
-                            th:text="${project.title}">プロジェクト名</a>
-                        <div class="project-card-meta">
-                            <span th:if="${project.genre != null and !project.genre.isEmpty()}"
-                                th:text="'ジャンル：' + ${project.genre}"></span>
-                            <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
-                        </div>
-                        <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
-                            <select name="phase" class="phase-select" onchange="this.form.submit()">
-                                <option value="">-- フェーズ --</option>
-                                <option value="作曲中" th:selected="${project.phase == '作曲中'}">作曲中</option>
-                                <option value="編曲中" th:selected="${project.phase == '編曲中'}">編曲中</option>
-                                <option value="レコーディング中" th:selected="${project.phase == 'レコーディング中'}">レコーディング中</option>
-                                <option value="ミキシング中" th:selected="${project.phase == 'ミキシング中'}">ミキシング中</option>
-                                <option value="マスタリング中" th:selected="${project.phase == 'マスタリング中'}">マスタリング中</option>
-                                <option value="リリース準備中" th:selected="${project.phase == 'リリース準備中'}">リリース準備中</option>
-                            </select>
-                        </form>
-                        <div class="card-actions">
-                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
-                                <input type="hidden" name="status" value="進行中">
-                                <button type="submit" class="btn-status">進行中へ →</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div th:if="${#lists.isEmpty(todoProjects)}" class="kanban-empty">プロジェクトなし</div>
-                    <!-- 未着手ページネーション -->
-                    <div class="pagination" th:if="${todoTotalPages > 1}">
-                        <a th:href="@{/(todoPage=${todoCurrentPage - 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
-                            class="page-btn" th:classappend="${todoCurrentPage == 0} ? 'disabled' : ''">←</a>
-                        <span class="page-info" th:text="${todoCurrentPage + 1} + ' / ' + ${todoTotalPages}"></span>
-                        <a th:href="@{/(todoPage=${todoCurrentPage + 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
-                            class="page-btn"
-                            th:classappend="${todoCurrentPage + 1 >= todoTotalPages} ? 'disabled' : ''">→</a>
-                    </div>
+                <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
+                    th:text="${project.title}">プロジェクト名</a>
+                <div class="project-card-meta">
+                    <span th:if="${project.genre != null and !project.genre.isEmpty()}"
+                        th:text="'ジャンル：' + ${project.genre}"></span>
+                    <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
                 </div>
-
-                <!-- 進行中 -->
-                <div class="kanban-column">
-                    <div class="kanban-header kanban-doing">進行中</div>
-                    <div th:each="project : ${doingProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
-                                  data-genre=${project.genre != null ? project.genre : ''},
-                                  data-phase=${project.phase != null ? project.phase : ''}">
-                        <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
-                            th:text="${project.title}">プロジェクト名</a>
-                        <div class="project-card-meta">
-                            <span th:if="${project.genre != null and !project.genre.isEmpty()}"
-                                th:text="'ジャンル：' + ${project.genre}"></span>
-                            <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
-                        </div>
-                        <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
-                            <select name="phase" class="phase-select" onchange="this.form.submit()">
-                                <option value="">-- フェーズ --</option>
-                                <option value="作曲中" th:selected="${project.phase == '作曲中'}">作曲中</option>
-                                <option value="編曲中" th:selected="${project.phase == '編曲中'}">編曲中</option>
-                                <option value="レコーディング中" th:selected="${project.phase == 'レコーディング中'}">レコーディング中</option>
-                                <option value="ミキシング中" th:selected="${project.phase == 'ミキシング中'}">ミキシング中</option>
-                                <option value="マスタリング中" th:selected="${project.phase == 'マスタリング中'}">マスタリング中</option>
-                                <option value="リリース準備中" th:selected="${project.phase == 'リリース準備中'}">リリース準備中</option>
-                            </select>
-                        </form>
-                        <div class="card-actions">
-                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
-                                <input type="hidden" name="status" value="完了">
-                                <button type="submit" class="btn-status">完了へ →</button>
-                            </form>
-                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
-                                <input type="hidden" name="status" value="未着手">
-                                <button type="submit" class="btn-status-back">← 戻す</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div th:if="${#lists.isEmpty(doingProjects)}" class="kanban-empty">プロジェクトなし</div>
-                    <!-- 進行中ページネーション -->
-                    <div class="pagination" th:if="${doingTotalPages > 1}">
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage - 1}, donePage=${doneCurrentPage})}"
-                            class="page-btn" th:classappend="${doingCurrentPage == 0} ? 'disabled' : ''">←</a>
-                        <span class="page-info" th:text="${doingCurrentPage + 1} + ' / ' + ${doingTotalPages}"></span>
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage + 1}, donePage=${doneCurrentPage})}"
-                            class="page-btn"
-                            th:classappend="${doingCurrentPage + 1 >= doingTotalPages} ? 'disabled' : ''">→</a>
-                    </div>
+                <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
+                    <select name="phase" class="phase-select" onchange="this.form.submit()">
+                        <option value="">-- フェーズ --</option>
+                        <option value="作曲中" th:selected="${project.phase == '作曲中'}">作曲中</option>
+                        <option value="編曲中" th:selected="${project.phase == '編曲中'}">編曲中</option>
+                        <option value="レコーディング中" th:selected="${project.phase == 'レコーディング中'}">レコーディング中</option>
+                        <option value="ミキシング中" th:selected="${project.phase == 'ミキシング中'}">ミキシング中</option>
+                        <option value="マスタリング中" th:selected="${project.phase == 'マスタリング中'}">マスタリング中</option>
+                        <option value="リリース準備中" th:selected="${project.phase == 'リリース準備中'}">リリース準備中</option>
+                    </select>
+                </form>
+                <div class="card-actions">
+                    <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                        <input type="hidden" name="status" value="進行中">
+                        <button type="submit" class="btn-status">進行中へ →</button>
+                    </form>
                 </div>
-
-                <!-- 完了 -->
-                <div class="kanban-column">
-                    <div class="kanban-header kanban-done">完了</div>
-                    <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done"
-                        th:attr="data-title=${project.title},
-                                  data-genre=${project.genre != null ? project.genre : ''},
-                                  data-phase=${project.phase != null ? project.phase : ''}">
-                        <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link project-link-done"
-                            th:text="${project.title}">プロジェクト名</a>
-                        <div class="project-card-meta">
-                            <span th:if="${project.genre != null and !project.genre.isEmpty()}"
-                                th:text="'ジャンル：' + ${project.genre}"></span>
-                            <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
-                        </div>
-                        <div class="card-actions">
-                            <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
-                                <input type="hidden" name="status" value="進行中">
-                                <button type="submit" class="btn-status-back">← 戻す</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div th:if="${#lists.isEmpty(doneProjects)}" class="kanban-empty">プロジェクトなし</div>
-                    <!-- 完了ページネーション -->
-                    <div class="pagination" th:if="${doneTotalPages > 1}">
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage - 1})}"
-                            class="page-btn" th:classappend="${doneCurrentPage == 0} ? 'disabled' : ''">←</a>
-                        <span class="page-info" th:text="${doneCurrentPage + 1} + ' / ' + ${doneTotalPages}"></span>
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage + 1})}"
-                            class="page-btn"
-                            th:classappend="${doneCurrentPage + 1 >= doneTotalPages} ? 'disabled' : ''">→</a>
-                    </div>
-                </div>
-
             </div>
-        </main>
+            <div th:if="${#lists.isEmpty(todoProjects)}" class="kanban-empty">プロジェクトなし</div>
+            <!-- 未着手ページネーション -->
+            <div class="pagination" th:if="${todoTotalPages > 1}">
+                <a th:href="@{/(todoPage=${todoCurrentPage - 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
+                    class="page-btn" th:classappend="${todoCurrentPage == 0} ? 'disabled' : ''">←</a>
+                <span class="page-info" th:text="${todoCurrentPage + 1} + ' / ' + ${todoTotalPages}"></span>
+                <a th:href="@{/(todoPage=${todoCurrentPage + 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
+                    class="page-btn" th:classappend="${todoCurrentPage + 1 >= todoTotalPages} ? 'disabled' : ''">→</a>
+            </div>
+        </div>
+
+        <!-- 進行中 -->
+        <div class="kanban-column">
+            <div class="kanban-header kanban-doing">進行中</div>
+            <div th:each="project : ${doingProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
+                                  data-genre=${project.genre != null ? project.genre : ''},
+                                  data-phase=${project.phase != null ? project.phase : ''}">
+                <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
+                    th:text="${project.title}">プロジェクト名</a>
+                <div class="project-card-meta">
+                    <span th:if="${project.genre != null and !project.genre.isEmpty()}"
+                        th:text="'ジャンル：' + ${project.genre}"></span>
+                    <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+                </div>
+                <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
+                    <select name="phase" class="phase-select" onchange="this.form.submit()">
+                        <option value="">-- フェーズ --</option>
+                        <option value="作曲中" th:selected="${project.phase == '作曲中'}">作曲中</option>
+                        <option value="編曲中" th:selected="${project.phase == '編曲中'}">編曲中</option>
+                        <option value="レコーディング中" th:selected="${project.phase == 'レコーディング中'}">レコーディング中</option>
+                        <option value="ミキシング中" th:selected="${project.phase == 'ミキシング中'}">ミキシング中</option>
+                        <option value="マスタリング中" th:selected="${project.phase == 'マスタリング中'}">マスタリング中</option>
+                        <option value="リリース準備中" th:selected="${project.phase == 'リリース準備中'}">リリース準備中</option>
+                    </select>
+                </form>
+                <div class="card-actions">
+                    <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                        <input type="hidden" name="status" value="完了">
+                        <button type="submit" class="btn-status">完了へ →</button>
+                    </form>
+                    <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                        <input type="hidden" name="status" value="未着手">
+                        <button type="submit" class="btn-status-back">← 戻す</button>
+                    </form>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(doingProjects)}" class="kanban-empty">プロジェクトなし</div>
+            <!-- 進行中ページネーション -->
+            <div class="pagination" th:if="${doingTotalPages > 1}">
+                <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage - 1}, donePage=${doneCurrentPage})}"
+                    class="page-btn" th:classappend="${doingCurrentPage == 0} ? 'disabled' : ''">←</a>
+                <span class="page-info" th:text="${doingCurrentPage + 1} + ' / ' + ${doingTotalPages}"></span>
+                <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage + 1}, donePage=${doneCurrentPage})}"
+                    class="page-btn" th:classappend="${doingCurrentPage + 1 >= doingTotalPages} ? 'disabled' : ''">→</a>
+            </div>
+        </div>
+
+        <!-- 完了 -->
+        <div class="kanban-column">
+            <div class="kanban-header kanban-done">完了</div>
+            <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done" th:attr="data-title=${project.title},
+                                  data-genre=${project.genre != null ? project.genre : ''},
+                                  data-phase=${project.phase != null ? project.phase : ''}">
+                <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link project-link-done"
+                    th:text="${project.title}">プロジェクト名</a>
+                <div class="project-card-meta">
+                    <span th:if="${project.genre != null and !project.genre.isEmpty()}"
+                        th:text="'ジャンル：' + ${project.genre}"></span>
+                    <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+                </div>
+                <div class="card-actions">
+                    <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">
+                        <input type="hidden" name="status" value="進行中">
+                        <button type="submit" class="btn-status-back">← 戻す</button>
+                    </form>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(doneProjects)}" class="kanban-empty">プロジェクトなし</div>
+            <!-- 完了ページネーション -->
+            <div class="pagination" th:if="${doneTotalPages > 1}">
+                <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage - 1})}"
+                    class="page-btn" th:classappend="${doneCurrentPage == 0} ? 'disabled' : ''">←</a>
+                <span class="page-info" th:text="${doneCurrentPage + 1} + ' / ' + ${doneTotalPages}"></span>
+                <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage + 1})}"
+                    class="page-btn" th:classappend="${doneCurrentPage + 1 >= doneTotalPages} ? 'disabled' : ''">→</a>
+            </div>
+        </div>
+
+    </div>
+    </main>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>

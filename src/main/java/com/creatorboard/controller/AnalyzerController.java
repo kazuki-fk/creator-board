@@ -135,6 +135,39 @@ public class AnalyzerController {
         return "analyzer";
     }
 
+    // 解析履歴の詳細表示
+    @GetMapping("/{id}")
+    public String showAnalysisDetail(@PathVariable Long id,
+            Model model,
+            Principal principal) {
+        AlsAnalysis analysis = alsAnalysisRepository.findById(id).orElseThrow();
+
+        if (!analysis.getUser().getUsername().equals(principal.getName())) {
+            return "redirect:/analyzer";
+        }
+
+        // デバイス一覧をJSONから復元
+        List<String> devices = new ArrayList<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String[] arr = mapper.readValue(analysis.getDevicesJson(), String[].class);
+            devices = List.of(arr);
+        } catch (Exception ignored) {
+        }
+
+        // 全プロジェクト一覧
+        User user = userRepository.findByUsername(principal.getName()).orElseThrow();
+        List<Project> projects = projectRepository.findByUser(user);
+
+        model.addAttribute("selectedAnalysis", analysis);
+        model.addAttribute("selectedDevices", devices);
+        model.addAttribute("projects", projects);
+        model.addAttribute("histories",
+                alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user));
+
+        return "analyzer";
+    }
+
     public static class TrackInfo {
         private String name;
         private List<String> devices;

@@ -44,6 +44,56 @@
                 </div>
             </div>
 
+            <!-- 保存済み解析結果の表示 -->
+            <div th:if="${selectedAnalysis}" class="analyzer-result">
+                <h2 th:text="'解析結果 — ' + ${selectedAnalysis.fileName}">解析結果</h2>
+
+                <div class="analyzer-summary">
+                    <div class="summary-card">
+                        <div class="summary-label">BPM</div>
+                        <div class="summary-value accent" th:text="${selectedAnalysis.bpm}">128</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">トラック数</div>
+                        <div class="summary-value" th:text="${selectedAnalysis.trackCount}">14</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">解析日時</div>
+                        <div class="summary-value" style="font-size:1rem;"
+                            th:text="${#temporals.format(selectedAnalysis.analyzedAt, 'yyyy/MM/dd HH:mm')}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用デバイス一覧 -->
+                <h3>使用デバイス</h3>
+                <div class="analyzer-tracks">
+                    <div class="track-devices" style="padding:10px 0;">
+                        <span th:each="device : ${selectedDevices}" class="device-badge"
+                            th:text="${device}">Wavetable</span>
+                        <span th:if="${#lists.isEmpty(selectedDevices)}" class="no-device">デバイス情報なし</span>
+                    </div>
+                </div>
+
+                <!-- BPMをプロジェクトに反映 -->
+                <div class="bpm-apply-section">
+                    <h3>BPM をプロジェクトに反映</h3>
+                    <form th:action="@{/analyzer/apply-bpm}" method="post" class="bpm-apply-form">
+                        <input type="hidden" name="bpm" th:value="${selectedAnalysis.bpm}">
+                        <select name="projectId" class="phase-select" style="width:auto; min-width:200px;">
+                            <option value="">-- プロジェクトを選択 --</option>
+                            <option th:each="project : ${projects}" th:value="${project.id}"
+                                th:text="${project.title} + ' (現在BPM: ' + (${project.bpm != null} ? ${project.bpm} : '未設定') + ')'">
+                            </option>
+                        </select>
+                        <button type="submit" class="btn-main" style="margin-left:10px;">
+                            反映する
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+
             <!-- 解析結果 -->
             <div th:if="${bpm}" class="analyzer-result">
 

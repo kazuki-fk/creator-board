@@ -1269,6 +1269,19 @@ header h1 {
     flex-wrap: wrap;
 }
 
+.analysis-row-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.analysis-row-link:hover {
+    border-color: var(--accent-color);
+}
+
+.analysis-row-link:visited {
+    color: inherit;
+}
+
 /* ==========================================================================
    レスポンシブ対応
    ========================================================================== */
