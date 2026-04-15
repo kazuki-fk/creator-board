@@ -178,6 +178,11 @@
                     <span th:if="${project.genre != null and !project.genre.isEmpty()}"
                         th:text="'ジャンル：' + ${project.genre}"></span>
                     <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+
+                    <span th:if="${project.deadline != null }" th:text="'締め切り：' + ${project.deadline}"></span>
+                    <span th:if="${expiredIds.contains(project.id)}" style="color:#ef5350; font-weight:bold;">
+                        ⚠ 期限切れ
+                    </span>
                 </div>
                 <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
                     <select name="phase" class="phase-select" onchange="this.form.submit()">
@@ -220,6 +225,11 @@
                     <span th:if="${project.genre != null and !project.genre.isEmpty()}"
                         th:text="'ジャンル：' + ${project.genre}"></span>
                     <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+
+                    <span th:if="${project.deadline != null }" th:text="'締め切り：' + ${project.deadline}"></span>
+                    <span th:if="${expiredIds.contains(project.id)}" style="color:#ef5350; font-weight:bold;">
+                        ⚠ 期限切れ
+                    </span>
                 </div>
                 <form th:action="@{/projects/{id}/phase(id=${project.id})}" method="post">
                     <select name="phase" class="phase-select" onchange="this.form.submit()">
@@ -266,6 +276,10 @@
                     <span th:if="${project.genre != null and !project.genre.isEmpty()}"
                         th:text="'ジャンル：' + ${project.genre}"></span>
                     <span th:if="${project.bpm != null}" th:text="'BPM：' + ${project.bpm}"></span>
+                    <span th:if="${project.deadline != null }" th:text="'締め切り：' + ${project.deadline}"></span>
+                    <span th:if="${expiredIds.contains(project.id)}" style="color:#ef5350; font-weight:bold;">
+                        ⚠ 期限切れ
+                    </span>
                 </div>
                 <div class="card-actions">
                     <form th:action="@{/projects/{id}/status(id=${project.id})}" method="post">

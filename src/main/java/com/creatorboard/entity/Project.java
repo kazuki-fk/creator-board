@@ -3,6 +3,8 @@ package com.creatorboard.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,6 +35,8 @@ public class Project {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    private LocalDate deadline;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

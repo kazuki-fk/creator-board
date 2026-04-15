@@ -18,9 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -88,6 +87,17 @@ public class DashboardController {
                                 phaseMap.put(p.getPhase(), phaseMap.get(p.getPhase()) + 1);
                         }
                 }
+
+                LocalDate today = LocalDate.now();
+                Set<Long> expiredIds = new HashSet<>();
+
+                for (Project p : allProjects) {
+                        if (p.getDeadline() != null && p.getDeadline().isBefore(today)) {
+                                expiredIds.add(p.getId());
+                        }
+
+                }
+                model.addAttribute("expiredIds", expiredIds);
 
                 Map<String, String> labelMap = new LinkedHashMap<>();
                 labelMap.put("作曲中", "作曲中");
