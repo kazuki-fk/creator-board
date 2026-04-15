@@ -63,6 +63,18 @@
                             th:text="${#temporals.format(selectedAnalysis.analyzedAt, 'yyyy/MM/dd HH:mm')}">
                         </div>
                     </div>
+                    <div class="summary-card">
+                        <div class="summary-label">MIDIトラック</div>
+                        <div class="summary-value" th:text="${midi}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">オーディオトラック</div>
+                        <div class="summary-value" th:text="${audio}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">リターントラック</div>
+                        <div class="summary-value" th:text="${returnTrackCount}">-</div>
+                    </div>
                 </div>
 
                 <!-- 使用デバイス一覧 -->
@@ -112,6 +124,18 @@
                     <div class="summary-card">
                         <div class="summary-label">トラック数</div>
                         <div class="summary-value" th:text="${tracks.size()}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">MIDIトラック</div>
+                        <div class="summary-value" th:text="${midi}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">オーディオトラック</div>
+                        <div class="summary-value" th:text="${audio}">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">リターントラック</div>
+                        <div class="summary-value" th:text="${returnTrackCount}">-</div>
                     </div>
                 </div>
 

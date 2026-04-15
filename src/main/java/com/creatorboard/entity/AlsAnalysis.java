@@ -23,13 +23,25 @@ public class AlsAnalysis {
     private Double bpm;
 
     @Column(name = "track_count")
+
     private Integer trackCount;
 
     @Column(columnDefinition = "TEXT")
+
     private String devicesJson;
 
     @Column(name = "analyzed_at")
     private LocalDateTime analyzedAt;
+
+    @Column(name = "midi_count")
+    private Integer midiCount;
+
+    @Column(name = "audio_count")
+    private Integer audioCount;
+
+    @Column(name = "return_count")
+    private Integer returnCount;
+
 
     @PrePersist
     protected void onCreate() {

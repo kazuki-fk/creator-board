@@ -95,6 +95,11 @@ public class AnalyzerController {
             double bpm = Double.parseDouble(bpmStr);
             int trackCount = root.get("tracks").size();
 
+            JsonNode summary = root.get("tracks_summary");
+            int midiCount = summary.get("midi_count").asInt();
+            int audioCount = summary.get("audio_count").asInt();
+            int returnCount = summary.get("return_count").asInt();
+
             List<String> allDevices = new ArrayList<>();
             List<TrackInfo> tracks = new ArrayList<>();
             for (JsonNode track : root.get("tracks")) {
@@ -115,14 +120,22 @@ public class AnalyzerController {
             analysis.setFileName(file.getOriginalFilename());
             analysis.setBpm(bpm);
             analysis.setTrackCount(trackCount);
+            analysis.setMidiCount(midiCount);
+            analysis.setAudioCount(audioCount);
+            analysis.setReturnCount(returnCount);
             analysis.setDevicesJson(mapper.writeValueAsString(allDevices));
             alsAnalysisRepository.save(analysis);
+
 
             model.addAttribute("projectName", root.get("project_name").asText());
             model.addAttribute("bpm", bpmStr);
             model.addAttribute("tracks", tracks);
             model.addAttribute("histories",
                     alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user));
+
+            model.addAttribute("midi", midiCount);
+            model.addAttribute("audio", audioCount);
+            model.addAttribute("returnTrackCount", returnCount);
 
         } catch (Exception e) {
             model.addAttribute("error",
