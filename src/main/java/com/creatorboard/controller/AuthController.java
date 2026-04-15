@@ -12,6 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class AuthController {
 
@@ -20,6 +27,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -30,22 +40,36 @@ public class AuthController {
     @PostMapping("/signup")
     public String registerUser(@Valid @ModelAttribute("user") User user,
             BindingResult result,
-            Model model) {
-        // バリデーションエラーチェック
+            Model model,
+            HttpServletRequest request) {
         if (result.hasErrors()) {
             return "signup";
         }
 
-        // ユーザー名重複チェック
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             model.addAttribute("error", "このユーザー名はすでに使われています");
             return "signup";
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // パスワードを暗号化前に保存
+        String rawPassword = user.getPassword();
+
+        user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole("ROLE_USER");
         userRepository.save(user);
-        return "redirect:/login";
+
+        // 自動ログイン
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getUsername(),
+                rawPassword);
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // セッションに認証情報を保存
+        HttpSession session = request.getSession(true);
+        session.setAttribute("SPRING_SECURITY_CONTEXT",
+                SecurityContextHolder.getContext());
+
+        return "redirect:/";
     }
 
     @GetMapping("/login")
