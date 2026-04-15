@@ -1268,3 +1268,192 @@ header h1 {
     gap: 10px;
     flex-wrap: wrap;
 }
+
+/* ==========================================================================
+   レスポンシブ対応
+   ========================================================================== */
+
+/* タブレット（768px以下） */
+@media (max-width: 768px) {
+
+    /* ログイン画面 */
+    .login-wrapper {
+        flex-direction: column;
+    }
+
+    .login-hero {
+        padding: 40px 30px;
+        min-height: 300px;
+    }
+
+    .login-headline {
+        font-size: 2rem;
+    }
+
+    .login-form-area {
+        width: 100%;
+        padding: 40px 30px;
+    }
+
+    /* ダッシュボード */
+    .dashboard-wrapper {
+        width: 96%;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .kanban-board {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .analyzer-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .search-select {
+        width: 100%;
+    }
+
+    .btn-clear {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* フォーム */
+    .form-wrapper {
+        width: 90%;
+        margin: 30px auto;
+        padding: 24px;
+    }
+
+    /* ヘッダー */
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 0;
+    }
+
+    .user-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .kanban-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .kanban-header-row .btn-main {
+        align-self: flex-end;
+    }
+}
+
+/* スマホ（480px以下） */
+@media (max-width: 480px) {
+
+    /* ログイン画面 */
+    .login-hero {
+        padding: 30px 20px;
+        min-height: 240px;
+    }
+
+    .login-headline {
+        font-size: 1.6rem;
+    }
+
+    .login-sub {
+        font-size: 0.85rem;
+    }
+
+    .login-features {
+        display: none;
+    }
+
+    .login-form-area {
+        padding: 30px 20px;
+    }
+
+    /* サマリーカード */
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    /* Analyzerサマリー */
+    .analyzer-summary {
+        grid-template-columns: 1fr;
+    }
+
+    /* 解析履歴 */
+    .analysis-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .analysis-date {
+        min-width: unset;
+        text-align: left;
+    }
+
+    /* ページネーション */
+    .pagination {
+        gap: 6px;
+    }
+
+    /* フォーム */
+    .form-wrapper {
+        width: 95%;
+        padding: 20px 16px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn-main {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* ヘッダー */
+    header h1 {
+        font-size: 11px;
+    }
+
+    .user-info {
+        font-size: 11px;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    /* BPM反映フォーム */
+    .bpm-apply-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bpm-apply-form .btn-main {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+    }
+}
