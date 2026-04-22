@@ -2,19 +2,19 @@
    Root
    ========================================================================== */
 :root {
-    --bg-dark: #1c1c1c;
-    --bg-mid: #1e1e1e;
-    --bg-card: #242424;
-    --bg-hover: #2a2a2a;
-    --bg-base: #141414;
+    --bg-dark: #2a2a2a;
+    --bg-mid: #232323;
+    --bg-card: #303030;
+    --bg-hover: #383838;
+    --bg-base: #1a1a1a;
     --text-main: #f0f0f0;
     --text-sub: #f0f0f0;
     --text-muted: #999;
     --accent-color: #ff8906;
     --accent-blue: #4d9fff;
     --accent-green: #3cb37a;
-    --border-color: #2a2a2a;
-    --border-hover: #3a3a3a;
+    --border-color: #3a3a3a;
+    --border-hover: #4a4a4a;
     --font-sans: "Inter", -apple-system, sans-serif;
     --font-mono: "Monaco", "Consolas", monospace;
 }
