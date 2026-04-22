@@ -178,3 +178,36 @@ document.addEventListener('DOMContentLoaded', function () {
     if (genreFilter) genreFilter.addEventListener('change', filterProjects);
     if (phaseFilter) phaseFilter.addEventListener('change', filterProjects);
 });
+
+// ドラッグ＆ドロップ
+document.querySelectorAll('.project-kanban-card').forEach(function (card) {
+    card.addEventListener('dragstart', function (e) {
+        e.dataTransfer.setData('projectId', card.dataset.id);
+    });
+});
+
+document.querySelectorAll('.kanban-column').forEach(function (column) {
+    column.addEventListener('dragover', function (e) {
+        e.preventDefault();
+    });
+
+    column.addEventListener('drop', function (e) {
+        e.preventDefault();
+        var projectId = e.dataTransfer.getData('projectId');
+        var newStatus = column.dataset.status;
+
+        var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        var csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/projects/' + projectId + '/status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [csrfHeader]: csrfToken
+            },
+            body: 'status=' + encodeURIComponent(newStatus)
+        }).then(function () {
+            location.reload();
+        });
+    });
+});

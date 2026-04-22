@@ -6,6 +6,8 @@
     <title>CreatorBoard - ダッシュボード</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
@@ -167,11 +169,12 @@
     <div class="kanban-board">
 
         <!-- 未着手 -->
-        <div class="kanban-column">
+        <div class="kanban-column" data-status="未着手">
             <div class="kanban-header kanban-todo">未着手</div>
-            <div th:each="project : ${todoProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
+            <div th:each="project : ${todoProjects}" class="project-kanban-card" draggable="true" th:attr="data-title=${project.title},
                                   data-genre=${project.genre != null ? project.genre : ''},
-                                  data-phase=${project.phase != null ? project.phase : ''}">
+                                  data-phase=${project.phase != null ? project.phase : ''},
+                                  data-id=${project.id}">
                 <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
                     th:text="${project.title}">プロジェクト名</a>
                 <div class="project-card-meta">
@@ -214,11 +217,12 @@
         </div>
 
         <!-- 進行中 -->
-        <div class="kanban-column">
+        <div class="kanban-column" data-status="進行中">
             <div class="kanban-header kanban-doing">進行中</div>
-            <div th:each="project : ${doingProjects}" class="project-kanban-card" th:attr="data-title=${project.title},
+            <div th:each="project : ${doingProjects}" class="project-kanban-card" draggable="true" th:attr="data-title=${project.title},
                                   data-genre=${project.genre != null ? project.genre : ''},
-                                  data-phase=${project.phase != null ? project.phase : ''}">
+                                  data-phase=${project.phase != null ? project.phase : ''},
+                                  data-id=${project.id}">
                 <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link"
                     th:text="${project.title}">プロジェクト名</a>
                 <div class="project-card-meta">
@@ -265,11 +269,13 @@
         </div>
 
         <!-- 完了 -->
-        <div class="kanban-column">
+        <div class="kanban-column" data-status="完了">
             <div class="kanban-header kanban-done">完了</div>
-            <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done" th:attr="data-title=${project.title},
+            <div th:each="project : ${doneProjects}" class="project-kanban-card project-kanban-card-done"
+                draggable="true" th:attr="data-title=${project.title},
                                   data-genre=${project.genre != null ? project.genre : ''},
-                                  data-phase=${project.phase != null ? project.phase : ''}">
+                                  data-phase=${project.phase != null ? project.phase : ''},
+                                  data-id=${project.id}">
                 <a th:href="@{/projects/{id}(id=${project.id})}" class="project-link project-link-done"
                     th:text="${project.title}">プロジェクト名</a>
                 <div class="project-card-meta">
