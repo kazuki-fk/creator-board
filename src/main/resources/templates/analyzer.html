@@ -44,6 +44,27 @@
                 </div>
             </div>
 
+            <!-- 解析履歴一覧＋比較フォーム -->
+            <div class="analyzer-upload-section" style="margin-top: 30px;">
+                <h3 style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">解析履歴</h3>
+
+                <form th:action="@{/analyzer/compare}" method="post">
+                    <div class="analysis-list">
+                        <div th:each="a : ${histories}" class="analysis-row">
+                            <input type="checkbox" name="compareIds" th:value="${a.id}">
+                            <span class="analysis-filename" th:text="${a.fileName}">file.als</span>
+                            <span class="analysis-bpm" th:text="'BPM ' + ${a.bpm}">BPM 128</span>
+                            <span class="analysis-date"
+                                th:text="${#temporals.format(a.analyzedAt, 'MM/dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    <div style="text-align:center; margin-top:12px;">
+                        <button type="submit" class="btn-main" style="width:200px;">比較する</button>
+                    </div>
+                </form>
+            </div>
+
+
             <!-- 保存済み解析結果の表示 -->
             <div th:if="${selectedAnalysis}" class="analyzer-result">
                 <h2 th:text="'解析結果 — ' + ${selectedAnalysis.fileName}">解析結果</h2>

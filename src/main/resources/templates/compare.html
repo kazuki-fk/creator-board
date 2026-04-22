@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CreatorBoard - 解析比較</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <header>
+            <h1>解析結果比較</h1>
+            <div class="user-info">
+                <a th:href="@{/analyzer}" class="btn-link">← Analyzerへ</a>
+            </div>
+        </header>
+
+        <main>
+            <div class="analyzer-result">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>項目</th>
+                            <!-- 各ファイル名をヘッダーに表示 -->
+                            <th th:each="r : ${compareResults}" th:text="${r.fileName}">file.als</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BPM</td>
+                            <td th:each="r : ${compareResults}" th:text="${r.bpm}">-</td>
+                        </tr>
+                        <tr>
+                            <td>トラック数</td>
+                            <td th:each="r : ${compareResults}" th:text="${r.trackCount}">-</td>
+                        </tr>
+                        <tr>
+                            <td>MIDIトラック</td>
+                            <td th:each="r : ${compareResults}" th:text="${r.midiCount}">-</td>
+                        </tr>
+                        <tr>
+                            <td>オーディオトラック</td>
+                            <td th:each="r : ${compareResults}" th:text="${r.audioCount}">-</td>
+                        </tr>
+                        <tr>
+                            <td>リターントラック</td>
+                            <td th:each="r : ${compareResults}" th:text="${r.returnCount}">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1309,6 +1309,40 @@ header h1 {
 }
 
 /* ==========================================================================
+   ALSファイル比較
+   ========================================================================== */
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 12px;
+}
+
+.compare-table th {
+    background: var(--bg-hover);
+    color: var(--accent-color);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.compare-table tr:first-child td {
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.compare-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+
+/* ==========================================================================
    レスポンシブ対応
    ========================================================================== */
 

@@ -126,7 +126,6 @@ public class AnalyzerController {
             analysis.setDevicesJson(mapper.writeValueAsString(allDevices));
             alsAnalysisRepository.save(analysis);
 
-
             model.addAttribute("projectName", root.get("project_name").asText());
             model.addAttribute("bpm", bpmStr);
             model.addAttribute("tracks", tracks);
@@ -179,6 +178,21 @@ public class AnalyzerController {
                 alsAnalysisRepository.findByUserOrderByAnalyzedAtDesc(user));
 
         return "analyzer";
+    }
+
+    @PostMapping("/compare")
+    public String compare(@RequestParam List<Long> compareIds,
+            Model model,
+            Principal principal) {
+
+        List<AlsAnalysis> results = new ArrayList<>();
+        for (Long id : compareIds) {
+            AlsAnalysis analysis = alsAnalysisRepository.findById(id).orElseThrow();
+            results.add(analysis);
+        }
+
+        model.addAttribute("compareResults", results);
+        return "compare";
     }
 
     public static class TrackInfo {
