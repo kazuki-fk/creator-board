@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
         p1.setStatus("進行中");
         p1.setPhase("ミキシング中");
         p1.setMemo("G minorベース、キックG1、KOC寄りのグルーヴ");
-        p1.setDeadline(LocalDate.of(2025, 5, 31));
+        p1.setDeadline(LocalDate.of(2026, 7, 31));
         p1.setUser(demo);
         projectRepository.save(p1);
 
@@ -61,7 +61,7 @@ public class DataInitializer implements CommandLineRunner {
         p2.setStatus("未着手");
         p2.setPhase("作曲中");
         p2.setMemo("Hessle Audioっぽいサブベース重視");
-        p2.setDeadline(LocalDate.of(2025, 6, 15));
+        p2.setDeadline(LocalDate.of(2026, 6, 15));
         p2.setUser(demo);
         projectRepository.save(p2);
 
@@ -84,26 +84,26 @@ public class DataInitializer implements CommandLineRunner {
         p4.setStatus("進行中");
         p4.setPhase("編曲中");
         p4.setMemo("Acting Press寄りのグルーヴ感");
-        p4.setDeadline(LocalDate.of(2025, 7, 1));
+        p4.setDeadline(LocalDate.of(2026, 7, 1));
         p4.setUser(demo);
         projectRepository.save(p4);
 
         // 制作日誌
         ProjectLog log1 = new ProjectLog();
         log1.setProject(p1);
-        log1.setDate(LocalDate.of(2025, 4, 20));
+        log1.setDate(LocalDate.of(2026, 4, 20));
         log1.setContent("キックとベースのチューニング完了。G1でロック済み。");
         projectLogRepository.save(log1);
 
         ProjectLog log2 = new ProjectLog();
         log2.setProject(p1);
-        log2.setDate(LocalDate.of(2025, 4, 22));
+        log2.setDate(LocalDate.of(2026, 4, 22));
         log2.setContent("EchoとReverbのセンドバランス調整。Hybrid Reverbでスペース感を追加。");
         projectLogRepository.save(log2);
 
         ProjectLog log3 = new ProjectLog();
         log3.setProject(p2);
-        log3.setDate(LocalDate.of(2025, 4, 23));
+        log3.setDate(LocalDate.of(2026, 4, 23));
         log3.setContent("サブベースのEQ調整。250Hz以下をLPでカット。");
         projectLogRepository.save(log3);
     }
