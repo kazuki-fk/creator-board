@@ -10,7 +10,11 @@
 
 <body>
     <div class="form-wrapper">
-        <h2>新規プロジェクト作成</h2>
+        <div class="detail-header">
+            <h2>新規プロジェクト作成</h2>
+            <a th:href="@{/dashboard}" class="btn-link">← ダッシュボードへ</a>
+        </div>
+
         <form th:action="@{/projects/new}" th:object="${project}" method="post">
             <div class="form-group">
                 <label>プロジェクト名</label>
@@ -35,7 +39,6 @@
                     <option value="Jazz">Jazz</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>ステータス</label>
                 <select th:field="*{status}">
@@ -44,7 +47,6 @@
                     <option value="完了">完了</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>作業フェーズ</label>
                 <select th:field="*{phase}">
@@ -57,12 +59,24 @@
                     <option value="リリース準備中">リリース準備中</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>締め切り日</label>
                 <input type="date" th:field="*{deadline}">
             </div>
-
+            <div class="form-group">
+                <label>メモ</label>
+                <textarea th:field="*{memo}" rows="4" placeholder="制作メモを自由に記入してください"></textarea>
+            </div>
+            <div class="form-group">
+                <label>制作日誌（任意）</label>
+                <input type="date" name="initialLogDate"
+                    th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}" style="padding:8px 12px; background:var(--bg-mid); border:1px solid var(--border-color);
+                           border-radius:6px; color:var(--text-main); font-family:var(--font-mono); font-size:13px;
+                           margin-bottom:8px; display:block; width:100%;">
+                <textarea name="initialLog" rows="3" placeholder="今日の作業内容を記録..." style="padding:8px 12px; background:var(--bg-mid); border:1px solid var(--border-color);
+                           border-radius:6px; color:var(--text-main); font-family:var(--font-mono); font-size:13px;
+                           resize:vertical; width:100%;"></textarea>
+            </div>
             <div class="form-actions">
                 <button type="submit" class="btn-main">作成する</button>
                 <a th:href="@{/dashboard}" class="btn-cancel">キャンセル</a>
