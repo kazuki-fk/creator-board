@@ -208,10 +208,10 @@
                     <div th:if="${#lists.isEmpty(todoProjects)}" class="kanban-empty">プロジェクトなし</div>
                     <!-- 未着手ページネーション -->
                     <div class="pagination" th:if="${todoTotalPages > 1}">
-                        <a th:href="@{/(todoPage=${todoCurrentPage - 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
+                        <a th:href="@{/dashboard(todoPage=${todoCurrentPage - 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
                             class="page-btn" th:classappend="${todoCurrentPage == 0} ? 'disabled' : ''">←</a>
                         <span class="page-info" th:text="${todoCurrentPage + 1} + ' / ' + ${todoTotalPages}"></span>
-                        <a th:href="@{/(todoPage=${todoCurrentPage + 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
+                        <a th:href="@{/dashboard(todoPage=${todoCurrentPage + 1}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage})}"
                             class="page-btn"
                             th:classappend="${todoCurrentPage + 1 >= todoTotalPages} ? 'disabled' : ''">→</a>
                     </div>
@@ -261,10 +261,10 @@
                     <div th:if="${#lists.isEmpty(doingProjects)}" class="kanban-empty">プロジェクトなし</div>
                     <!-- 進行中ページネーション -->
                     <div class="pagination" th:if="${doingTotalPages > 1}">
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage - 1}, donePage=${doneCurrentPage})}"
+                        <a th:href="@{/dashboard(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage - 1}, donePage=${doneCurrentPage})}"
                             class="page-btn" th:classappend="${doingCurrentPage == 0} ? 'disabled' : ''">←</a>
                         <span class="page-info" th:text="${doingCurrentPage + 1} + ' / ' + ${doingTotalPages}"></span>
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage + 1}, donePage=${doneCurrentPage})}"
+                        <a th:href="@{/dashboard(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage + 1}, donePage=${doneCurrentPage})}"
                             class="page-btn"
                             th:classappend="${doingCurrentPage + 1 >= doingTotalPages} ? 'disabled' : ''">→</a>
                     </div>
@@ -299,10 +299,10 @@
                     <div th:if="${#lists.isEmpty(doneProjects)}" class="kanban-empty">プロジェクトなし</div>
                     <!-- 完了ページネーション -->
                     <div class="pagination" th:if="${doneTotalPages > 1}">
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage - 1})}"
+                        <a th:href="@{/dashboard(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage - 1})}"
                             class="page-btn" th:classappend="${doneCurrentPage == 0} ? 'disabled' : ''">←</a>
                         <span class="page-info" th:text="${doneCurrentPage + 1} + ' / ' + ${doneTotalPages}"></span>
-                        <a th:href="@{/(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage + 1})}"
+                        <a th:href="@{/dashboard(todoPage=${todoCurrentPage}, doingPage=${doingCurrentPage}, donePage=${doneCurrentPage + 1})}"
                             class="page-btn"
                             th:classappend="${doneCurrentPage + 1 >= doneTotalPages} ? 'disabled' : ''">→</a>
                     </div>

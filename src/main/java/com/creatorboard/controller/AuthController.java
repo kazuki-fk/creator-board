@@ -73,7 +73,10 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/dashboard";
+        }
         return "login";
     }
 

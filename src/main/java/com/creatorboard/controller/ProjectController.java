@@ -43,7 +43,7 @@ public class ProjectController {
                 .orElseThrow();
         project.setUser(user);
         projectRepository.save(project);
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
     // 詳細・編集フォーム表示
@@ -51,7 +51,7 @@ public class ProjectController {
     public String showDetail(@PathVariable Long id, Model model, Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         model.addAttribute("project", project);
         return "project-detail";
@@ -68,7 +68,7 @@ public class ProjectController {
         }
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         project.setTitle(form.getTitle());
         project.setGenre(form.getGenre());
@@ -77,7 +77,7 @@ public class ProjectController {
         project.setPhase(form.getPhase());
         project.setMemo(form.getMemo());
         projectRepository.save(project);
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
     // フェーズ更新
@@ -87,11 +87,11 @@ public class ProjectController {
             Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         project.setPhase(phase);
         projectRepository.save(project);
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
     // ステータス更新（カンバン列移動）
@@ -101,11 +101,11 @@ public class ProjectController {
             Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         project.setStatus(status);
         projectRepository.save(project);
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
     // 削除
@@ -113,9 +113,9 @@ public class ProjectController {
     public String deleteProject(@PathVariable Long id, Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         projectRepository.delete(project);
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 }

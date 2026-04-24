@@ -12,7 +12,7 @@
     <div class="form-wrapper" style="width: 560px;">
         <div class="detail-header">
             <h2 th:text="${project.title}">プロジェクト名</h2>
-            <a th:href="@{/}" class="btn-link">← ダッシュボードへ</a>
+            <a th:href="@{/dashboard}" class="btn-link">← ダッシュボードへ</a>
         </div>
 
         <form th:action="@{/projects/{id}/edit(id=${project.id})}" th:object="${project}" method="post">
