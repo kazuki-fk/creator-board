@@ -69,11 +69,21 @@ public class AuthController {
         session.setAttribute("SPRING_SECURITY_CONTEXT",
                 SecurityContextHolder.getContext());
 
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
+    }
+
+    @GetMapping("/profile")
+    public String showProfile() {
+        return "profile";
+    }
+
+    @GetMapping("/") // ← 追加
+    public String index() {
+        return "redirect:/profile";
     }
 }

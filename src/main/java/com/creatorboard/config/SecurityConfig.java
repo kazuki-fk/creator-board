@@ -19,12 +19,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // 文字列だけで指定すれば、Springが良きに計らってくれます
-                        .requestMatchers("/h2-console/**", "/signup", "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/signup", "/login", "/profile", "/", "/css/**", "/js/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/dashboard", true) // ← / → /dashboard
                         .permitAll())
                 .logout(logout -> logout.permitAll())
                 // H2コンソール用のCSRF無効化も文字列指定でOK

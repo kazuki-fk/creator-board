@@ -15,6 +15,7 @@
         <header>
             <h1>CREATORBOARD</h1>
             <div class="user-info">
+                <a th:href="@{/profile}" class="nav-link">Profile</a>
                 <button class="nav-analyzer-link" onclick="location.href='/analyzer'">Ableton Analyzer</button>
                 <span style="color:#333">|</span>
                 <span th:text="${username} + ' さん'">User さん</span>

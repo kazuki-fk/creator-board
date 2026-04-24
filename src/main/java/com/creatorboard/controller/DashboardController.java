@@ -36,7 +36,7 @@ public class DashboardController {
 
         private static final int PAGE_SIZE = 6;
 
-        @GetMapping("/")
+        @GetMapping("/dashboard")
         public String showDashboard(Model model, Principal principal,
                         @RequestParam(defaultValue = "0") int todoPage,
                         @RequestParam(defaultValue = "0") int doingPage,

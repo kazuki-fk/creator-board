@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>K.F - Profile</title>
+</head>
+
+<body class="profile-page">
+
+    <nav class="global-nav">
+        <div class="nav-logo">K.F</div>
+        <div class="nav-links">
+            <a th:href="@{/login}" class="nav-link btn-main">CreatorBoard →</a>
+        </div>
+    </nav>
+
+    <section id="hero">
+        <h1><span>K</span>.F</h1>
+        <p>// developer &amp; music producer</p>
+    </section>
+
+    <section id="myprofile" class="fade-in">
+        <div class="inner">
+            <h2>Profile</h2>
+            <p>現在、転職活動中。職業訓練でJava＋Python講座を受講。<br>
+                電子音楽制作にも取り組み、Ableton Live 12 Suiteを使用して楽曲を制作・配信しています。</p>
+        </div>
+    </section>
+
+    <section id="myskill" class="fade-in">
+        <div class="inner">
+            <h2>Skills</h2>
+            <ul>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>Javascript</li>
+                <li>SQL</li>
+                <li>Python</li>
+                <li>Java</li>
+                <li>サーブレット</li>
+                <li>JSP</li>
+                <li>Ableton Live 12</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="mywork" class="fade-in">
+        <div class="inner">
+            <h2>Works</h2>
+            <div class="works-grid">
+                <div class="work-card">
+                    <h3>Music Production</h3>
+                    <p>電子音楽を中心に制作・配信。Ableton Live 12 Suiteを使用。</p>
+                    <a href="BandcampのURL" target="_blank">Bandcampで聴く →</a>
+                </div>
+                <div class="work-card">
+                    <h3>CreatorBoard</h3>
+                    <p>音楽プロジェクトタスク管理＋Ableton Liveファイル内デバイス解析ツール</p>
+                    <a href="https://github.com/kazuki-fk/creator-board" target="_blank">GitHubで見る →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>&copy; 2025 K.F</footer>
+
+    <script th:src="@{/js/script.js}"></script>
+</body>
+
+</html>
