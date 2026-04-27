@@ -13,116 +13,120 @@
 
 <body class="profile-page">
 
+    <!-- 固定背景 -->
+    <div class="pf-bg-fixed">
+        <div class="pf-bg-name">K.F</div>
+    </div>
+
     <!-- スクロールプログレスバー -->
     <div class="pf-progress" id="pfProgress"></div>
 
     <!-- セクションインジケーター -->
     <nav class="pf-indicator" aria-hidden="true">
-        <div class="pf-indicator-dot active" data-target="pf-hero" data-label="Top"></div>
-        <div class="pf-indicator-dot" data-target="about" data-label="About"></div>
-        <div class="pf-indicator-dot" data-target="skills" data-label="Skills"></div>
-        <div class="pf-indicator-dot" data-target="works" data-label="Works"></div>
+        <div class="pf-indicator-dot active" data-target="sec-hero" data-label="Top"></div>
+        <div class="pf-indicator-dot" data-target="sec-about" data-label="About"></div>
+        <div class="pf-indicator-dot" data-target="sec-skills" data-label="Skills"></div>
+        <div class="pf-indicator-dot" data-target="sec-works" data-label="Works"></div>
     </nav>
 
     <!-- Nav -->
     <nav class="pf-nav">
         <span class="pf-nav-logo">K.F</span>
         <div class="pf-nav-links">
-            <a href="#about" class="pf-nav-link">About</a>
-            <a href="#skills" class="pf-nav-link">Skills</a>
-            <a href="#works" class="pf-nav-link">Works</a>
+            <a href="#sec-about" class="pf-nav-link">About</a>
+            <a href="#sec-skills" class="pf-nav-link">Skills</a>
+            <a href="#sec-works" class="pf-nav-link">Works</a>
             <a th:href="@{/login}" class="pf-nav-link pf-accent">CreatorBoard ↗</a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="pf-hero" id="pf-hero">
-        <div class="pf-hero-inner">
+    <!-- スクロールコンテンツ -->
+    <div class="pf-scroll-content">
+
+        <!-- Hero -->
+        <section id="sec-hero" class="pf-section pf-sec-hero">
             <div class="pf-hero-kicker">ポートフォリオ — 2025</div>
             <div class="pf-hero-name">K<span class="pf-dot">.</span>F</div>
-        </div>
-        <div class="pf-hero-band">
-            <div class="pf-hero-band-left">
-                <span class="pf-hero-role-en">Developer / Music Producer</span>
-                <span class="pf-hero-role-jp">開発者・音楽プロデューサー</span>
-            </div>
-            <span class="pf-hero-loc">Osaka, Japan</span>
-        </div>
-    </section>
+            <div class="pf-hero-sub">Engineer / Music Producer</div>
+            <span class="pf-hero-sub-jp">エンジニア・音楽プロデューサー — Osaka, Japan</span>
+        </section>
 
-    <!-- About -->
-    <section id="about" class="pf-about pf-fade">
-        <div class="pf-about-label">自己紹介</div>
-        <div class="pf-about-body">
-            <p class="pf-about-en">
-                Currently seeking new opportunities. Completed vocational training in
-                <strong>Java &amp; Python</strong>. Electronic music producer —
-                <strong>Ableton Live 12 Suite</strong>.
-            </p>
-            <p class="pf-about-jp">
-                転職活動中。職業訓練にてJava・Pythonを受講し、フルスタック開発を習得。
-                電子音楽制作にも取り組み、Ableton Live 12 Suiteを使用して楽曲を制作・配信しています。
-            </p>
-        </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills" class="pf-skills pf-fade">
-        <div class="pf-skills-hd">
-            <div class="pf-skills-tag">Skills</div>
-            <span class="pf-skills-tag-jp">技術スタック</span>
-        </div>
-        <div class="pf-skills-list">
-            <span class="pf-skill">HTML / CSS</span>
-            <span class="pf-skill">JavaScript</span>
-            <span class="pf-skill">Java</span>
-            <span class="pf-skill">Spring Boot</span>
-            <span class="pf-skill">Python</span>
-            <span class="pf-skill">SQL / MySQL</span>
-            <span class="pf-skill">Servlet / JSP</span>
-            <span class="pf-skill">Ableton Live 12</span>
-        </div>
-    </section>
-
-    <!-- Works -->
-    <section id="works" class="pf-works pf-fade">
-        <div class="pf-works-hd">
-            <span class="pf-works-hd-en">Works</span>
-            <span class="pf-works-hd-jp">制作物</span>
-        </div>
-
-        <div class="pf-work">
+        <!-- About -->
+        <section id="sec-about" class="pf-section pf-sec-about pf-fade">
             <div>
-                <div class="pf-w-num">01</div>
-                <div class="pf-w-title-en">CreatorBoard</div>
-                <div class="pf-w-title-jp">音楽プロジェクト管理 + Abletonファイル解析ツール</div>
-                <div class="pf-w-desc">Java / Spring Boot / MySQL / Thymeleaf</div>
+                <div class="pf-sec-label">About / 自己紹介</div>
+                <div class="pf-sec-heading">Developer<br>&amp; Producer</div>
+                <p class="pf-about-en">
+                    Currently seeking new opportunities. Completed vocational training in
+                    <strong>Java &amp; Python</strong>. Electronic music producer —
+                    <strong>Ableton Live 12 Suite</strong>.
+                </p>
+                <p class="pf-about-jp">
+                    転職活動中。職業訓練にてJava・Pythonを受講。
+                    電子音楽制作にも取り組み、Ableton Live 12 Suiteを使用して楽曲を制作・配信しています。
+                </p>
             </div>
-            <a href="https://github.com/kazuki-fk/creator-board" target="_blank" class="pf-w-link">GitHub ↗</a>
-        </div>
+        </section>
 
-        <div class="pf-work">
+        <!-- Skills -->
+        <section id="sec-skills" class="pf-section pf-sec-skills pf-fade">
             <div>
-                <div class="pf-w-num">02</div>
-                <div class="pf-w-title-en">Music Production</div>
-                <div class="pf-w-title-jp">電子音楽制作・配信</div>
-                <div class="pf-w-desc">Ableton Live 12 Suite</div>
+                <div class="pf-sec-label">Skills / 技術スタック</div>
+                <div class="pf-sec-heading">Tech Stack</div>
+                <div class="pf-skills-list">
+                    <span class="pf-skill">HTML / CSS</span>
+                    <span class="pf-skill">JavaScript</span>
+                    <span class="pf-skill">Java</span>
+                    <span class="pf-skill">Python</span>
+                    <span class="pf-skill">SQL</span>
+                    <span class="pf-skill">Servlet / JSP</span>
+                    <span class="pf-skill">Spring Boot(自己学習)</span>
+                    <span class="pf-skill">Ableton Live 12</span>
+                </div>
             </div>
-            <a href="#" target="_blank" class="pf-w-link">Bandcamp ↗</a>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="pf-footer">
-        <span class="pf-footer-copy">© 2025 K.F</span>
-        <a th:href="@{/login}" class="pf-footer-link">CreatorBoard →</a>
-    </footer>
+        <!-- Works -->
+        <section id="sec-works" class="pf-section pf-sec-works pf-fade">
+            <div style="width:100%">
+                <div class="pf-sec-label">Works / 制作物</div>
+                <div class="pf-sec-heading">Works</div>
+                <div class="pf-works-list">
+                    <div class="pf-work">
+                        <div>
+                            <div class="pf-w-num">01</div>
+                            <div class="pf-w-title-en">CreatorBoard</div>
+                            <div class="pf-w-title-jp">音楽プロジェクト管理 + Abletonファイル解析ツール</div>
+                            <div class="pf-w-desc">Java / Spring Boot / MySQL / Thymeleaf</div>
+                        </div>
+                        <a href="https://github.com/kazuki-fk/creator-board" target="_blank" class="pf-w-link">GitHub
+                            ↗</a>
+                    </div>
+                    <div class="pf-work">
+                        <div>
+                            <div class="pf-w-num">02</div>
+                            <div class="pf-w-title-en">Music Production</div>
+                            <div class="pf-w-title-jp">電子音楽制作・配信</div>
+                            <div class="pf-w-desc">Ableton Live 12 Suite</div>
+                        </div>
+                        <a href="#" target="_blank" class="pf-w-link">Bandcamp ↗</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pf-footer">
+            <span class="pf-footer-copy">© 2025 K.F</span>
+            <a th:href="@{/login}" class="pf-footer-link">CreatorBoard →</a>
+        </footer>
+
+    </div><!-- /.pf-scroll-content -->
 
     <script th:src="@{/js/script.js}"></script>
     <script>
         // ---- スクロールプログレスバー ----
         const progress = document.getElementById('pfProgress');
-
         function updateProgress() {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -136,15 +140,15 @@
             entries.forEach(e => {
                 if (e.isIntersecting) e.target.classList.add('pf-visible');
             });
-        }, { threshold: 0.12 });
+        }, { threshold: 0.15 });
         fadeEls.forEach(el => fadeObs.observe(el));
 
         // ---- セクションインジケーター ----
         const sectionMap = [
-            { id: 'pf-hero' },
-            { id: 'about' },
-            { id: 'skills' },
-            { id: 'works' },
+            { id: 'sec-hero' },
+            { id: 'sec-about' },
+            { id: 'sec-skills' },
+            { id: 'sec-works' },
         ];
         const dots = document.querySelectorAll('.pf-indicator-dot');
 
