@@ -20,6 +20,13 @@
 
                 <!-- 左側：プロジェクト編集 -->
                 <div class="detail-left">
+                    <div th:if="${project.fileName != null}">
+                        <span th:text="${project.fileName}">project.als</span>
+                        <a th:href="@{/projects/{id}/download(id=${project.id})}" class="btn-main">ダウンロード</a>
+                    </div>
+                    <div th:if="${project.fileName == null}">
+                        <span>添付ファイルなし</span>
+                    </div>
                     <div class="form-group">
                         <label>プロジェクト名</label>
                         <input type="text" th:field="*{title}" required>

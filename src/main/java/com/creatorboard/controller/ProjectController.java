@@ -16,6 +16,17 @@ import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.*;
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
@@ -28,6 +39,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectLogRepository projectLogRepository;
+
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
 
     // 新規作成フォーム表示
     @GetMapping("/new")
@@ -42,13 +56,26 @@ public class ProjectController {
             BindingResult result,
             Principal principal,
             @RequestParam(required = false) String initialLog,
-            @RequestParam(required = false) String initialLogDate) {
+            @RequestParam(required = false) String initialLogDate,
+            @RequestParam(required = false) MultipartFile alsFile) throws IOException {
         if (result.hasErrors()) {
             return "project-form";
         }
         User user = userRepository.findByUsername(principal.getName())
                 .orElseThrow();
         project.setUser(user);
+
+        // ファイルが添付されていれば保存
+        if (alsFile != null && !alsFile.isEmpty()) {
+            Path dir = Paths.get(uploadDir, String.valueOf(user.getId()));
+            Files.createDirectories(dir);
+            String uniqueName = UUID.randomUUID() + "_" + alsFile.getOriginalFilename();
+            Files.copy(alsFile.getInputStream(), dir.resolve(uniqueName),
+                    StandardCopyOption.REPLACE_EXISTING);
+            project.setFilePath(dir.resolve(uniqueName).toString());
+            project.setFileName(alsFile.getOriginalFilename());
+        }
+
         projectRepository.save(project);
 
         if (initialLog != null && !initialLog.isBlank()) {
@@ -87,6 +114,29 @@ public class ProjectController {
         }
         projectLogRepository.deleteById(logId);
         return "redirect:/projects/" + id;
+    }
+
+    // ダウンロード用
+
+    @GetMapping("/{id}/download")
+    public ResponseEntity<Resource> download(@PathVariable Long id,
+            Principal principal) throws MalformedURLException {
+        Project project = projectRepository.findById(id).orElseThrow();
+        if (!project.getUser().getUsername().equals(principal.getName())) {
+            return ResponseEntity.status(403).build();
+        }
+        if (project.getFilePath() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Path filePath = Paths.get(project.getFilePath());
+        Resource resource = new UrlResource(filePath.toUri());
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + project.getFileName() + "\"")
+                .body(resource);
     }
 
     // 編集保存

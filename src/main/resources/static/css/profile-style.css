@@ -1,0 +1,683 @@
+/* ==========================================================================
+   profile.html 専用スタイル
+   CreatorBoard（style.css）の雰囲気に合わせたグレー系
+   ========================================================================== */
+
+/* Google Fonts は profile.html の <head> で読み込む
+   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,900;1,900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+*/
+
+/* ===== Reset ===== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== 変数 ===== */
+:root {
+    --pf-navy: #000080;
+    /* CreatorBoardの--text-mainと統一 */
+    --pf-navy-h: #0000aa;
+    --pf-bg: #d4d9df;
+    /* CreatorBoardの--bg-darkと統一 */
+    --pf-card: #2b2b2b;
+    /* CreatorBoardの--card-bgと統一 */
+    --pf-fg: #ffffff;
+    --pf-text: #1a1a1a;
+    --pf-muted: #8a8a8a;
+    /* CreatorBoardの--text-subと統一 */
+    --pf-dim: #cccccc;
+    --pf-accent: #ff7c31;
+    /* CreatorBoardの--accent-colorと統一 */
+    --pf-line: #b8bfc7;
+    --pf-line2: #121212;
+    /* CreatorBoardの--border-colorと統一 */
+    --pf-cond: 'Barlow Condensed', sans-serif;
+    --pf-jp: 'Noto Sans JP', sans-serif;
+}
+
+/* ===== Base ===== */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--pf-bg);
+    color: var(--pf-text);
+    font-family: var(--pf-cond);
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Nav
+   ========================================================================== */
+.pf-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 40px;
+    border-bottom: 2px solid var(--pf-line2);
+    position: sticky;
+    top: 0;
+    background: var(--pf-card);
+    z-index: 100;
+}
+
+.pf-nav-logo {
+    font-size: 14px;
+    letter-spacing: .14em;
+    font-weight: 900;
+    color: var(--pf-fg);
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.pf-nav-links {
+    display: flex;
+}
+
+/* hoverで下線スライド */
+.pf-nav-link {
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--pf-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-left: 1px solid #3e3e3e;
+    transition: color .15s, background .15s;
+    text-decoration: none;
+    font-family: var(--pf-cond);
+    position: relative;
+    overflow: hidden;
+}
+
+.pf-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: var(--pf-accent);
+    transition: left .25s cubic-bezier(.22, 1, .36, 1);
+}
+
+.pf-nav-link:hover {
+    color: var(--pf-fg);
+    background: #3e3e3e;
+}
+
+.pf-nav-link:hover::after {
+    left: 0;
+}
+
+.pf-nav-link.pf-accent {
+    color: var(--pf-fg);
+    background: var(--pf-navy);
+    border-color: var(--pf-navy);
+}
+
+.pf-nav-link.pf-accent:hover {
+    background: var(--pf-navy-h);
+}
+
+.pf-nav-link.pf-accent::after {
+    display: none;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.pf-hero {
+    border-bottom: 3px solid var(--pf-navy);
+}
+
+.pf-hero-inner {
+    padding: 48px 40px 28px;
+    position: relative;
+    overflow: hidden;
+    background: var(--pf-card);
+}
+
+.pf-hero-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 39px,
+            #222222 39px,
+            #222222 40px);
+    opacity: .35;
+    pointer-events: none;
+}
+
+/* 左スライドイン */
+.pf-hero-kicker {
+    display: inline-block;
+    background: var(--pf-navy);
+    color: var(--pf-fg);
+    font-size: 11px;
+    letter-spacing: .18em;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    font-family: var(--pf-jp);
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateX(-40px);
+    animation: slideInLeft .6s cubic-bezier(.22, 1, .36, 1) .1s forwards;
+}
+
+.pf-hero-name {
+    font-size: clamp(96px, 20vw, 160px);
+    font-weight: 900;
+    line-height: .82;
+    letter-spacing: -.03em;
+    text-transform: uppercase;
+    color: var(--pf-fg);
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateX(-60px);
+    animation: slideInLeft .7s cubic-bezier(.22, 1, .36, 1) .25s forwards;
+}
+
+.pf-hero-name .pf-dot {
+    color: var(--pf-accent);
+}
+
+.pf-hero-band {
+    background: var(--pf-bg);
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid var(--pf-line);
+    opacity: 0;
+    transform: translateX(-30px);
+    animation: slideInLeft .6s cubic-bezier(.22, 1, .36, 1) .45s forwards;
+}
+
+.pf-hero-band-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pf-hero-role-en {
+    font-size: 13px;
+    letter-spacing: .08em;
+    font-weight: 900;
+    color: var(--pf-navy);
+    text-transform: uppercase;
+}
+
+.pf-hero-role-jp {
+    font-size: 12px;
+    font-family: var(--pf-jp);
+    font-weight: 700;
+    color: var(--pf-muted);
+}
+
+.pf-hero-loc {
+    font-size: 11px;
+    letter-spacing: .1em;
+    font-weight: 700;
+    color: var(--pf-muted);
+    text-transform: uppercase;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==========================================================================
+   About
+   ========================================================================== */
+.pf-about {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    border-bottom: 1px solid var(--pf-line);
+    background: var(--pf-fg);
+}
+
+.pf-about-label {
+    background: var(--pf-navy);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding: 24px 12px;
+    font-size: 11px;
+    letter-spacing: .2em;
+    font-weight: 900;
+    color: var(--pf-fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--pf-jp);
+}
+
+.pf-about-body {
+    padding: 32px 40px;
+}
+
+.pf-about-en {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #333;
+    font-weight: 400;
+    letter-spacing: .02em;
+    margin-bottom: 16px;
+}
+
+.pf-about-en strong {
+    color: var(--pf-navy);
+    font-weight: 900;
+}
+
+.pf-about-jp {
+    font-size: 13px;
+    line-height: 2.1;
+    color: var(--pf-muted);
+    font-family: var(--pf-jp);
+    font-weight: 400;
+    letter-spacing: .04em;
+    border-left: 3px solid var(--pf-navy);
+    padding-left: 16px;
+}
+
+/* ==========================================================================
+   Skills
+   ========================================================================== */
+.pf-skills {
+    border-bottom: 1px solid var(--pf-line);
+    padding: 28px 40px;
+    background: var(--pf-bg);
+}
+
+.pf-skills-hd {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.pf-skills-tag {
+    background: var(--pf-navy);
+    color: var(--pf-fg);
+    font-size: 11px;
+    letter-spacing: .16em;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 4px 12px;
+}
+
+.pf-skills-tag-jp {
+    font-size: 12px;
+    font-family: var(--pf-jp);
+    font-weight: 700;
+    color: var(--pf-muted);
+    letter-spacing: .06em;
+}
+
+.pf-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+/* hoverでぷるっと */
+.pf-skill {
+    font-size: 12px;
+    letter-spacing: .07em;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border: 2px solid var(--pf-line);
+    color: var(--pf-muted);
+    background: var(--pf-fg);
+    transition: border-color .15s, color .15s, background .15s, transform .15s;
+    cursor: default;
+}
+
+.pf-skill:hover {
+    border-color: var(--pf-navy);
+    color: var(--pf-navy);
+    background: #eef0ff;
+    transform: translateY(-2px) scale(1.04);
+}
+
+/* ==========================================================================
+   Works
+   ========================================================================== */
+.pf-works {
+    border-bottom: 1px solid var(--pf-line);
+}
+
+.pf-works-hd {
+    background: var(--pf-card);
+    padding: 9px 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pf-works-hd-en {
+    font-size: 11px;
+    letter-spacing: .16em;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--pf-fg);
+}
+
+.pf-works-hd-jp {
+    font-size: 12px;
+    font-family: var(--pf-jp);
+    font-weight: 700;
+    color: var(--pf-muted);
+}
+
+.pf-work {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--pf-line);
+    background: var(--pf-fg);
+    transition: background .15s;
+}
+
+.pf-work:last-child {
+    border-bottom: none;
+}
+
+.pf-work:hover {
+    background: #f0f2f5;
+}
+
+.pf-w-num {
+    font-size: 11px;
+    letter-spacing: .12em;
+    color: var(--pf-accent);
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+/* hoverでオレンジアンダーライン伸長 */
+.pf-w-title-en {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -.01em;
+    color: var(--pf-navy);
+    text-transform: uppercase;
+    line-height: 1;
+    font-style: italic;
+    position: relative;
+    display: inline-block;
+}
+
+.pf-w-title-en::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 3px;
+    background: var(--pf-accent);
+    transition: width .3s cubic-bezier(.22, 1, .36, 1);
+}
+
+.pf-work:hover .pf-w-title-en::after {
+    width: 100%;
+}
+
+.pf-w-title-jp {
+    font-size: 12px;
+    font-family: var(--pf-jp);
+    font-weight: 400;
+    color: var(--pf-muted);
+    margin-top: 5px;
+    letter-spacing: .04em;
+}
+
+.pf-w-desc {
+    font-size: 11px;
+    letter-spacing: .07em;
+    color: #999;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 7px;
+}
+
+.pf-w-link {
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--pf-navy);
+    text-transform: uppercase;
+    font-weight: 900;
+    border: 2px solid var(--pf-navy);
+    padding: 9px 18px;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.pf-w-link:hover {
+    background: var(--pf-navy);
+    color: var(--pf-fg);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.pf-footer {
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--pf-card);
+    border-top: 2px solid var(--pf-line2);
+}
+
+.pf-footer-copy {
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--pf-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.pf-footer-link {
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--pf-accent);
+    text-transform: uppercase;
+    font-weight: 900;
+    text-decoration: none;
+    transition: color .15s;
+}
+
+.pf-footer-link:hover {
+    color: var(--pf-fg);
+}
+
+/* ==========================================================================
+   スクロールアニメーション
+   ========================================================================== */
+
+/* セクションフェードイン */
+.pf-fade {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity .7s cubic-bezier(.22, 1, .36, 1),
+        transform .7s cubic-bezier(.22, 1, .36, 1);
+}
+
+.pf-fade.pf-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Worksカードを順番に表示 */
+.pf-works.pf-visible .pf-work:nth-child(2) {
+    animation: fadeUp .5s cubic-bezier(.22, 1, .36, 1) .1s both;
+}
+
+.pf-works.pf-visible .pf-work:nth-child(3) {
+    animation: fadeUp .5s cubic-bezier(.22, 1, .36, 1) .25s both;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   スクロールプログレスバー
+   ========================================================================== */
+.pf-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--pf-accent);
+    z-index: 200;
+    transition: width .1s linear;
+}
+
+/* ==========================================================================
+   セクションインジケーター（右端のドット）
+   ========================================================================== */
+.pf-indicator {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 150;
+}
+
+.pf-indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b8bfc7;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+    position: relative;
+}
+
+.pf-indicator-dot.active {
+    background: var(--pf-accent);
+    transform: scale(1.5);
+}
+
+.pf-indicator-dot::before {
+    content: attr(data-label);
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--pf-accent);
+    white-space: nowrap;
+    opacity: 0;
+    font-family: var(--pf-cond);
+    font-weight: 700;
+    transition: opacity .2s;
+    pointer-events: none;
+}
+
+.pf-indicator-dot.active::before,
+.pf-indicator-dot:hover::before {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   レスポンシブ
+   ========================================================================== */
+@media (max-width: 640px) {
+    .pf-indicator {
+        display: none;
+    }
+
+    .pf-nav {
+        padding: 12px 20px;
+    }
+
+    .pf-nav-link {
+        padding: 7px 10px;
+        font-size: 10px;
+    }
+
+    .pf-hero-inner {
+        padding: 36px 20px 20px;
+    }
+
+    .pf-hero-band {
+        padding: 10px 20px;
+    }
+
+    .pf-hero-band-left {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .pf-about-body {
+        padding: 24px 20px;
+    }
+
+    .pf-skills {
+        padding: 24px 20px;
+    }
+
+    .pf-works-hd {
+        padding: 9px 20px;
+    }
+
+    .pf-work {
+        padding: 20px;
+        grid-template-columns: 1fr;
+    }
+
+    .pf-w-link {
+        width: fit-content;
+    }
+
+    .pf-footer {
+        padding: 14px 20px;
+    }
+}

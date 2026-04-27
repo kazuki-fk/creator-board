@@ -46,4 +46,10 @@ public class Project {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "file_name")
+    private String fileName;
 }

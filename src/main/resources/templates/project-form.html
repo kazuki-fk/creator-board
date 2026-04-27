@@ -15,7 +15,11 @@
             <a th:href="@{/dashboard}" class="btn-link">← ダッシュボードへ</a>
         </div>
 
-        <form th:action="@{/projects/new}" th:object="${project}" method="post">
+        <form th:action="@{/projects/new}" th:object="${project}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Abletonファイル (.als) — 任意</label>
+                <input type="file" name="alsFile" accept=".als">
+            </div>
             <div class="form-group">
                 <label>プロジェクト名</label>
                 <input type="text" th:field="*{title}" placeholder="例: Summer Demo 2025">
