@@ -1,126 +1,186 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <title>CreatorBoard - プロジェクト詳細</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>CreatorBoard - プロジェクト詳細</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
 
-<body>
-    <div class="form-wrapper" style="width: 900px; max-width: 96vw;">
-        <div class="detail-header">
-            <h2 th:text="${project.title}">プロジェクト名</h2>
-            <a th:href="@{/dashboard}" class="btn-link">← ダッシュボードへ</a>
-        </div>
+    <body>
+        <div class="form-wrapper" style="width: 900px; max-width: 96vw;">
+            <div class="detail-header">
+                <h2 th:text="${project.title}">プロジェクト名</h2>
+                <a th:href="@{/dashboard}" class="btn-link">← ダッシュボードへ</a>
+            </div>
 
-        <form th:action="@{/projects/{id}/edit(id=${project.id})}" th:object="${project}" method="post">
-            <div class="detail-layout">
-
-                <!-- 左側：プロジェクト編集 -->
-                <div class="detail-left">
-                    <div th:if="${project.fileName != null}">
-                        <span th:text="${project.fileName}">project.als</span>
-                        <a th:href="@{/projects/{id}/download(id=${project.id})}" class="btn-main">ダウンロード</a>
-                    </div>
-                    <div th:if="${project.fileName == null}">
-                        <span>添付ファイルなし</span>
-                    </div>
-                    <div class="form-group">
-                        <label>プロジェクト名</label>
-                        <input type="text" th:field="*{title}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>ジャンル</label>
-                        <select th:field="*{genre}">
-                            <option value="">-- 選択しない --</option>
-                            <option value="House">House</option>
-                            <option value="Lo-fi">Lo-fi</option>
-                            <option value="Techno">Techno</option>
-                            <option value="Pop">Pop</option>
-                            <option value="Hip-hop">Hip-hop</option>
-                            <option value="Drum'n'Bass">Drum'n'Bass</option>
-                            <option value="Ambient">Ambient</option>
-                            <option value="Jazz">Jazz</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>BPM</label>
-                        <input type="number" th:field="*{bpm}" min="60" max="300">
-                    </div>
-                    <div class="form-group">
-                        <label>ステータス</label>
-                        <select th:field="*{status}">
-                            <option value="未着手">未着手</option>
-                            <option value="進行中">進行中</option>
-                            <option value="完了">完了</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>作業フェーズ</label>
-                        <select th:field="*{phase}">
-                            <option value="">-- 選択しない --</option>
-                            <option value="作曲中">作曲中</option>
-                            <option value="編曲中">編曲中</option>
-                            <option value="レコーディング中">レコーディング中</option>
-                            <option value="ミキシング中">ミキシング中</option>
-                            <option value="マスタリング中">マスタリング中</option>
-                            <option value="リリース準備中">リリース準備中</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>締め切り日</label>
-                        <input type="date" th:field="*{deadline}">
-                    </div>
-                    <div class="form-group">
-                        <label>メモ</label>
-                        <textarea th:field="*{memo}" rows="5" placeholder="制作メモを自由に記入してください"></textarea>
-                    </div>
-                </div>
-
-                <!-- 右側：制作日誌 -->
-                <div class="detail-right">
-                    <p class="log-section-label">制作日誌</p>
-
-                    <!-- 日誌一覧（スクロール） -->
-                    <div class="log-list">
-                        <div th:if="${#lists.isEmpty(logs)}"
-                            style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono); padding:8px 0;">
-                            まだ日誌がありません
+            <!-- ゲスト向け：閲覧のみ表示 -->
+            <div th:if="${isGuest}">
+                <div class="detail-layout">
+                    <div class="detail-left">
+                        <div class="form-group">
+                            <label>プロジェクト名</label>
+                            <p th:text="${project.title}" style="font-size:14px; color:var(--text-main);"></p>
                         </div>
-                        <div th:each="log : ${logs}" class="log-item">
-                            <div class="log-item-header">
-                                <span class="log-date" th:text="${#temporals.format(log.date, 'yyyy/MM/dd')}"></span>
-                                <a th:href="@{/projects/{id}/logs/{logId}/delete(id=${project.id}, logId=${log.id})}"
-                                    class="btn-task-delete" onclick="return confirm('削除しますか？')">削除</a>
+                        <div class="form-group">
+                            <label>ジャンル</label>
+                            <p th:text="${project.genre ?: '-'}" style="font-size:14px; color:var(--text-main);"></p>
+                        </div>
+                        <div class="form-group">
+                            <label>BPM</label>
+                            <p th:text="${project.bpm ?: '-'}" style="font-size:14px; color:var(--text-main);"></p>
+                        </div>
+                        <div class="form-group">
+                            <label>ステータス</label>
+                            <p th:text="${project.status}" style="font-size:14px; color:var(--text-main);"></p>
+                        </div>
+                        <div class="form-group">
+                            <label>作業フェーズ</label>
+                            <p th:text="${project.phase ?: '-'}" style="font-size:14px; color:var(--text-main);"></p>
+                        </div>
+                        <div class="form-group">
+                            <label>締め切り日</label>
+                            <p th:text="${project.deadline ?: '-'}" style="font-size:14px; color:var(--text-main);"></p>
+                        </div>
+                        <div class="form-group">
+                            <label>メモ</label>
+                            <p th:text="${project.memo ?: '-'}"
+                                style="font-size:14px; color:var(--text-main); white-space:pre-wrap;"></p>
+                        </div>
+                    </div>
+
+                    <!-- 右側：制作日誌（閲覧のみ） -->
+                    <div class="detail-right">
+                        <p class="log-section-label">制作日誌</p>
+                        <div class="log-list">
+                            <div th:if="${#lists.isEmpty(logs)}"
+                                style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono); padding:8px 0;">
+                                まだ日誌がありません
                             </div>
-                            <p class="log-content" th:text="${log.content}"></p>
+                            <div th:each="log : ${logs}" class="log-item">
+                                <div class="log-item-header">
+                                    <span class="log-date"
+                                        th:text="${#temporals.format(log.date, 'yyyy/MM/dd')}"></span>
+                                </div>
+                                <p class="log-content" th:text="${log.content}"></p>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- 日誌入力 -->
-                    <div class="log-input-section">
-                        <input type="date" name="logDate"
-                            th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
-                        <textarea name="logContent" rows="3" placeholder="今日の作業内容を記録..."></textarea>
+                        <div
+                            style="margin-top:12px; font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">
+                            ログインすると日誌を追加できます
+                        </div>
                     </div>
                 </div>
 
+                <div class="detail-actions">
+                    <a th:href="@{/login}" class="btn-main">ログインして編集する</a>
+                    <a th:href="@{/dashboard}" class="btn-cancel">ダッシュボードへ戻る</a>
+                </div>
             </div>
 
-            <!-- 保存・削除ボタン -->
-            <div class="detail-actions">
-                <button type="submit" class="btn-main">保存する</button>
-                <a th:href="@{/projects/{id}/delete(id=${project.id})}" class="btn-delete"
-                    onclick="return confirm('削除しますか？')"
-                    style="display:inline-block; padding:8px 16px; text-decoration:none;">削除</a>
-                <a th:href="@{/dashboard}" class="btn-cancel">キャンセル</a>
-            </div>
-        </form>
+            <!-- ログイン済み：編集フォーム -->
+            <div th:if="${!isGuest}">
+                <form th:action="@{/projects/{id}/edit(id=${project.id})}" th:object="${project}" method="post">
+                    <div class="detail-layout">
+                        <div class="detail-left">
+                            <div th:if="${project.fileName != null}">
+                                <span th:text="${project.fileName}">project.als</span>
+                                <a th:href="@{/projects/{id}/download(id=${project.id})}" class="btn-main">ダウンロード</a>
+                            </div>
+                            <div th:if="${project.fileName == null}">
+                                <span>添付ファイルなし</span>
+                            </div>
+                            <div class="form-group">
+                                <label>プロジェクト名</label>
+                                <input type="text" th:field="*{title}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ジャンル</label>
+                                <select th:field="*{genre}">
+                                    <option value="">-- 選択しない --</option>
+                                    <option value="House">House</option>
+                                    <option value="Lo-fi">Lo-fi</option>
+                                    <option value="Techno">Techno</option>
+                                    <option value="Pop">Pop</option>
+                                    <option value="Hip-hop">Hip-hop</option>
+                                    <option value="Drum'n'Bass">Drum'n'Bass</option>
+                                    <option value="Ambient">Ambient</option>
+                                    <option value="Jazz">Jazz</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>BPM</label>
+                                <input type="number" th:field="*{bpm}" min="60" max="300">
+                            </div>
+                            <div class="form-group">
+                                <label>ステータス</label>
+                                <select th:field="*{status}">
+                                    <option value="未着手">未着手</option>
+                                    <option value="進行中">進行中</option>
+                                    <option value="完了">完了</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>作業フェーズ</label>
+                                <select th:field="*{phase}">
+                                    <option value="">-- 選択しない --</option>
+                                    <option value="作曲中">作曲中</option>
+                                    <option value="編曲中">編曲中</option>
+                                    <option value="レコーディング中">レコーディング中</option>
+                                    <option value="ミキシング中">ミキシング中</option>
+                                    <option value="マスタリング中">マスタリング中</option>
+                                    <option value="リリース準備中">リリース準備中</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>締め切り日</label>
+                                <input type="date" th:field="*{deadline}">
+                            </div>
+                            <div class="form-group">
+                                <label>メモ</label>
+                                <textarea th:field="*{memo}" rows="5" placeholder="制作メモを自由に記入してください"></textarea>
+                            </div>
+                        </div>
 
-    </div>
-    <script th:src="@{/js/script.js}"></script>
-</body>
+                        <!-- 右側：制作日誌 -->
+                        <div class="detail-right">
+                            <p class="log-section-label">制作日誌</p>
+                            <div class="log-list">
+                                <div th:if="${#lists.isEmpty(logs)}"
+                                    style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono); padding:8px 0;">
+                                    まだ日誌がありません
+                                </div>
+                                <div th:each="log : ${logs}" class="log-item">
+                                    <div class="log-item-header">
+                                        <span class="log-date"
+                                            th:text="${#temporals.format(log.date, 'yyyy/MM/dd')}"></span>
+                                        <a th:href="@{/projects/{id}/logs/{logId}/delete(id=${project.id}, logId=${log.id})}"
+                                            class="btn-task-delete" onclick="return confirm('削除しますか？')">削除</a>
+                                    </div>
+                                    <p class="log-content" th:text="${log.content}"></p>
+                                </div>
+                            </div>
+                            <div class="log-input-section">
+                                <input type="date" name="logDate"
+                                    th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
+                                <textarea name="logContent" rows="3" placeholder="今日の作業内容を記録..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-actions">
+                        <button type="submit" class="btn-main">保存する</button>
+                        <a th:href="@{/projects/{id}/delete(id=${project.id})}" class="btn-delete"
+                            onclick="return confirm('削除しますか？')"
+                            style="display:inline-block; padding:8px 16px; text-decoration:none;">削除</a>
+                        <a th:href="@{/dashboard}" class="btn-cancel">キャンセル</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <script th:src="@{/js/script.js}"></script>
+    </body>
 
 </html>

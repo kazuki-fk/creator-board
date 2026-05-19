@@ -1,87 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <title>CreatorBoard</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>CreatorBoard</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
 
-<body class="login-body">
+    <body class="login-body">
 
-    <div class="login-wrapper">
+        <div class="login-wrapper">
 
-        <!-- 左側：ヒーローエリア -->
-        <div class="login-hero">
-            <div class="login-hero-content">
-                <div class="login-logo">CreatorBoard</div>
-                <h1 class="login-headline">
-                    <span id="typed-text"></span>
-                    <span class="cursor">|</span>
-                </h1>
-                <p class="login-sub">
-                    楽曲制作のすべてを、一つの場所で。<br>
-                    プロジェクト管理から Ableton 解析まで。
-                </p>
-                <div class="login-features">
-                    <div class="feature-item">
-                        <span class="feature-dot"></span>
-                        プロジェクトのカンバン管理
+            <!-- 左側：ヒーローエリア -->
+            <div class="login-hero">
+                <div class="login-hero-content">
+                    <div class="login-logo">CreatorBoard</div>
+                    <h1 class="login-headline">
+                        <span id="typed-text"></span>
+                        <span class="cursor">|</span>
+                    </h1>
+                    <p class="login-sub">
+                        楽曲制作のすべてを、一つの場所で。<br>
+                        プロジェクト管理から Ableton 解析まで。
+                    </p>
+                    <div class="login-features">
+                        <div class="feature-item">
+                            <span class="feature-dot"></span>
+                            プロジェクトのカンバン管理
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-dot"></span>
+                            .als ファイルの自動解析
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-dot"></span>
+                            制作傾向のビジュアライズ
+                        </div>
                     </div>
-                    <div class="feature-item">
-                        <span class="feature-dot"></span>
-                        .als ファイルの自動解析
+                </div>
+                <!-- 背景グリッドアニメーション -->
+                <div class="grid-overlay"></div>
+                <canvas id="waveCanvas" class="wave-canvas"></canvas>
+            </div>
+
+            <!-- 右側：ログインフォーム -->
+            <div class="login-form-area">
+                <div class="login-form-box">
+                    <h2>ログイン</h2>
+
+                    <div th:if="${param.error}" class="login-error">
+                        ユーザー名またはパスワードが違います
                     </div>
-                    <div class="feature-item">
-                        <span class="feature-dot"></span>
-                        制作傾向のビジュアライズ
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="login-form-group">
+                            <label>ユーザー名</label>
+                            <input type="text" name="username" placeholder="username" required autocomplete="username">
+                        </div>
+                        <div class="login-form-group">
+                            <label>パスワード</label>
+                            <input type="password" name="password" placeholder="••••••••" required
+                                autocomplete="current-password">
+                        </div>
+                        <button type="submit" class="login-btn">
+                            ログイン
+                        </button>
+                    </form>
+
+                    <div class="login-signup-link">
+                        アカウントをお持ちでない方は
+                        <a th:href="@{/signup}">新規登録</a>
+                    </div>
+
+                    <div class="login-signup-link" style="margin-top: 12px;">
+                        <a th:href="@{/profile}">← プロフィールに戻る</a>
+                    </div>
+
+                    <div class="login-signup-link" style="margin-top: 12px;">
+                        <a th:href="@{/profile}">← プロフィールに戻る</a>
+                    </div>
+
+                    <div class="login-signup-link" style="margin-top: 16px;">
+                        <a th:href="@{/dashboard}" style="display:block; text-align:center; padding:14px;
+              border: 1px solid var(--border-color);
+              color: var(--text-sub);
+              text-decoration: none;
+              border-radius: 6px;
+              font-size: 0.9rem;">
+                            ゲストとして見る →
+                        </a>
                     </div>
                 </div>
             </div>
-            <!-- 背景グリッドアニメーション -->
-            <div class="grid-overlay"></div>
-            <canvas id="waveCanvas" class="wave-canvas"></canvas>
+
         </div>
 
-        <!-- 右側：ログインフォーム -->
-        <div class="login-form-area">
-            <div class="login-form-box">
-                <h2>ログイン</h2>
-
-                <div th:if="${param.error}" class="login-error">
-                    ユーザー名またはパスワードが違います
-                </div>
-
-                <form th:action="@{/login}" method="post">
-                    <div class="login-form-group">
-                        <label>ユーザー名</label>
-                        <input type="text" name="username" placeholder="username" required autocomplete="username">
-                    </div>
-                    <div class="login-form-group">
-                        <label>パスワード</label>
-                        <input type="password" name="password" placeholder="••••••••" required
-                            autocomplete="current-password">
-                    </div>
-                    <button type="submit" class="login-btn">
-                        ログイン
-                    </button>
-                </form>
-
-                <div class="login-signup-link">
-                    アカウントをお持ちでない方は
-                    <a th:href="@{/signup}">新規登録</a>
-                </div>
-
-                <div class="login-signup-link" style="margin-top: 12px;">
-                    <a th:href="@{/profile}">← プロフィールに戻る</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script th:src="@{/js/script.js}"></script>
-</body>
+        <script th:src="@{/js/script.js}"></script>
+    </body>
 
 </html>

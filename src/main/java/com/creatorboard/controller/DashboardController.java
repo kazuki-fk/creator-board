@@ -42,8 +42,12 @@ public class DashboardController {
                         @RequestParam(defaultValue = "0") int doingPage,
                         @RequestParam(defaultValue = "0") int donePage) {
 
-                User user = userRepository.findByUsername(principal.getName())
-                                .orElseThrow();
+                // ゲスト（未ログイン）はdemoユーザーのデータを表示
+                boolean isGuest = (principal == null);
+                String username = isGuest ? "demo" : principal.getName();
+
+                User user = userRepository.findByUsername(username).orElseThrow();
+                model.addAttribute("isGuest", isGuest);
 
                 Pageable todoPageable = PageRequest.of(todoPage, PAGE_SIZE, Sort.by("createdAt").descending());
                 Pageable doingPageable = PageRequest.of(doingPage, PAGE_SIZE, Sort.by("createdAt").descending());
@@ -65,7 +69,6 @@ public class DashboardController {
                 model.addAttribute("doingProjects", doingPage_.getContent());
                 model.addAttribute("doneProjects", donePage_.getContent());
 
-                // ページネーション情報
                 model.addAttribute("todoTotalPages", todoPage_.getTotalPages());
                 model.addAttribute("doingTotalPages", doingPage_.getTotalPages());
                 model.addAttribute("doneTotalPages", donePage_.getTotalPages());
@@ -90,12 +93,10 @@ public class DashboardController {
 
                 LocalDate today = LocalDate.now();
                 Set<Long> expiredIds = new HashSet<>();
-
                 for (Project p : allProjects) {
                         if (p.getDeadline() != null && p.getDeadline().isBefore(today)) {
                                 expiredIds.add(p.getId());
                         }
-
                 }
                 model.addAttribute("expiredIds", expiredIds);
 
@@ -123,7 +124,6 @@ public class DashboardController {
                 Map<String, Integer> mixingCount = new LinkedHashMap<>();
                 Map<String, Integer> fxCount = new LinkedHashMap<>();
                 Map<String, Integer> instrumentCount = new LinkedHashMap<>();
-                // カテゴリ別デバイス集計
 
                 ObjectMapper mapper = new ObjectMapper();
                 for (AlsAnalysis a : analyses) {
@@ -133,19 +133,13 @@ public class DashboardController {
                                         for (String d : devices) {
                                                 String category = DeviceCategory.classify(d);
                                                 switch (category) {
-                                                        case "drum":
+                                                        case "drum" ->
                                                                 drumCount.put(d, drumCount.getOrDefault(d, 0) + 1);
-                                                                break;
-                                                        case "mixing":
+                                                        case "mixing" ->
                                                                 mixingCount.put(d, mixingCount.getOrDefault(d, 0) + 1);
-                                                                break;
-                                                        case "fx":
-                                                                fxCount.put(d, fxCount.getOrDefault(d, 0) + 1);
-                                                                break;
-                                                        default:
-                                                                instrumentCount.put(d,
-                                                                                instrumentCount.getOrDefault(d, 0) + 1);
-                                                                break;
+                                                        case "fx" -> fxCount.put(d, fxCount.getOrDefault(d, 0) + 1);
+                                                        default -> instrumentCount.put(d,
+                                                                        instrumentCount.getOrDefault(d, 0) + 1);
                                                 }
                                         }
                                 }

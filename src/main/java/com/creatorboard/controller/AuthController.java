@@ -85,8 +85,8 @@ public class AuthController {
         return "profile";
     }
 
-    @GetMapping("/") // ← 追加
+    @GetMapping("/")
     public String index() {
-        return "redirect:/profile";
+        return "redirect:/dashboard";
     }
 }

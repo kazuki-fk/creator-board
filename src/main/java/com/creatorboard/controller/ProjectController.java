@@ -95,12 +95,23 @@ public class ProjectController {
     @GetMapping("/{id}")
     public String showDetail(@PathVariable Long id, Model model, Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
-        if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/dashboard";
+
+        // ゲストはdemoユーザーのプロジェクトのみ閲覧可能
+        boolean isGuest = (principal == null);
+        if (isGuest) {
+            if (!project.getUser().getUsername().equals("demo")) {
+                return "redirect:/dashboard";
+            }
+        } else {
+            if (!project.getUser().getUsername().equals(principal.getName())) {
+                return "redirect:/dashboard";
+            }
         }
+
         List<ProjectLog> logs = projectLogRepository.findByProjectOrderByDateDesc(project);
         model.addAttribute("project", project);
         model.addAttribute("logs", logs);
+        model.addAttribute("isGuest", isGuest);
         return "project-detail";
     }
 
@@ -177,30 +188,43 @@ public class ProjectController {
         return "redirect:/dashboard";
     }
 
-    // フェーズ更新
-    @PostMapping("/{id}/phase")
-    public String updatePhase(@PathVariable Long id,
-            @RequestParam String phase,
-            Principal principal) {
-        Project project = projectRepository.findById(id).orElseThrow();
-        if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/dashboard";
-        }
-        project.setPhase(phase);
-        projectRepository.save(project);
-        return "redirect:/dashboard";
-    }
-
     // ステータス更新（カンバン列移動）
     @PostMapping("/{id}/status")
     public String updateStatus(@PathVariable Long id,
             @RequestParam String status,
             Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
-        if (!project.getUser().getUsername().equals(principal.getName())) {
-            return "redirect:/dashboard";
+        // ゲストはdemoユーザーのプロジェクトのみ操作可能
+        if (principal == null) {
+            if (!project.getUser().getUsername().equals("demo")) {
+                return "redirect:/dashboard";
+            }
+        } else {
+            if (!project.getUser().getUsername().equals(principal.getName())) {
+                return "redirect:/dashboard";
+            }
         }
         project.setStatus(status);
+        projectRepository.save(project);
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/{id}/phase")
+    public String updatePhase(@PathVariable Long id,
+            @RequestParam String phase,
+            Principal principal) {
+        Project project = projectRepository.findById(id).orElseThrow();
+        // ゲストはdemoユーザーのプロジェクトのみ操作可能
+        if (principal == null) {
+            if (!project.getUser().getUsername().equals("demo")) {
+                return "redirect:/dashboard";
+            }
+        } else {
+            if (!project.getUser().getUsername().equals(principal.getName())) {
+                return "redirect:/dashboard";
+            }
+        }
+        project.setPhase(phase);
         projectRepository.save(project);
         return "redirect:/dashboard";
     }
