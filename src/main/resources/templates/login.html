@@ -77,20 +77,21 @@
                         <a th:href="@{/profile}">← プロフィールに戻る</a>
                     </div>
 
-                    <div class="login-signup-link" style="margin-top: 12px;">
-                        <a th:href="@{/profile}">← プロフィールに戻る</a>
+                    <!-- ゲストログインボタン -->
+                    <div class="login-signup-link" style="margin-top: 16px;">
+                        <form th:action="@{/guest-login}" method="post">
+                            <button type="submit" style="width:100%; padding:14px;
+                                border: 1px solid var(--border-color);
+                                background: none;
+                                color: var(--text-sub);
+                                border-radius: 6px;
+                                font-size: 0.9rem;
+                                cursor: pointer;">
+                                ゲストとして見る →
+                            </button>
+                        </form>
                     </div>
 
-                    <div class="login-signup-link" style="margin-top: 16px;">
-                        <a th:href="@{/dashboard}" style="display:block; text-align:center; padding:14px;
-              border: 1px solid var(--border-color);
-              color: var(--text-sub);
-              text-decoration: none;
-              border-radius: 6px;
-              font-size: 0.9rem;">
-                            ゲストとして見る →
-                        </a>
-                    </div>
                 </div>
             </div>
 

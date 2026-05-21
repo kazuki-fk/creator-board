@@ -51,9 +51,7 @@ public class AuthController {
             return "signup";
         }
 
-        // パスワードを暗号化前に保存
         String rawPassword = user.getPassword();
-
         user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole("ROLE_USER");
         userRepository.save(user);
@@ -64,10 +62,8 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // セッションに認証情報を保存
         HttpSession session = request.getSession(true);
-        session.setAttribute("SPRING_SECURITY_CONTEXT",
-                SecurityContextHolder.getContext());
+        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
         return "redirect:/dashboard";
     }
@@ -78,6 +74,23 @@ public class AuthController {
             return "redirect:/dashboard";
         }
         return "login";
+    }
+
+    // ゲストログイン
+    @PostMapping("/guest-login")
+    public String guestLogin(HttpServletRequest request) {
+        try {
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken("guest",
+                    "password");
+            Authentication authentication = authenticationManager.authenticate(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+        } catch (Exception e) {
+            return "redirect:/login?error";
+        }
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/profile")

@@ -43,6 +43,11 @@ public class ProjectController {
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
 
+    // guestユーザー判定ヘルパー
+    private boolean isGuest(Principal principal) {
+        return principal == null || principal.getName().equals("guest");
+    }
+
     // 新規作成フォーム表示
     @GetMapping("/new")
     public String showCreateForm(Model model) {
@@ -96,9 +101,8 @@ public class ProjectController {
     public String showDetail(@PathVariable Long id, Model model, Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
 
-        // ゲストはdemoユーザーのプロジェクトのみ閲覧可能
-        boolean isGuest = (principal == null);
-        if (isGuest) {
+        boolean guest = isGuest(principal);
+        if (guest) {
             if (!project.getUser().getUsername().equals("demo")) {
                 return "redirect:/dashboard";
             }
@@ -111,7 +115,7 @@ public class ProjectController {
         List<ProjectLog> logs = projectLogRepository.findByProjectOrderByDateDesc(project);
         model.addAttribute("project", project);
         model.addAttribute("logs", logs);
-        model.addAttribute("isGuest", isGuest);
+        model.addAttribute("isGuest", guest);
         return "project-detail";
     }
 
@@ -128,7 +132,6 @@ public class ProjectController {
     }
 
     // ダウンロード用
-
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> download(@PathVariable Long id,
             Principal principal) throws MalformedURLException {
@@ -165,6 +168,10 @@ public class ProjectController {
         if (!project.getUser().getUsername().equals(principal.getName())) {
             return "redirect:/dashboard";
         }
+        // デモユーザーのプロジェクトは編集不可
+        if (project.getUser().getUsername().equals("demo")) {
+            return "redirect:/dashboard";
+        }
         project.setTitle(form.getTitle());
         project.setGenre(form.getGenre());
         project.setBpm(form.getBpm());
@@ -174,7 +181,6 @@ public class ProjectController {
         project.setDeadline(form.getDeadline());
         projectRepository.save(project);
 
-        // 日誌があれば保存
         if (logContent != null && !logContent.isBlank()) {
             ProjectLog log = new ProjectLog();
             log.setProject(project);
@@ -194,8 +200,9 @@ public class ProjectController {
             @RequestParam String status,
             Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
-        // ゲストはdemoユーザーのプロジェクトのみ操作可能
-        if (principal == null) {
+        boolean guest = isGuest(principal);
+        if (guest) {
+            // ゲストはdemoユーザーのプロジェクトのみ操作可能
             if (!project.getUser().getUsername().equals("demo")) {
                 return "redirect:/dashboard";
             }
@@ -209,13 +216,15 @@ public class ProjectController {
         return "redirect:/dashboard";
     }
 
+    // フェーズ更新
     @PostMapping("/{id}/phase")
     public String updatePhase(@PathVariable Long id,
             @RequestParam String phase,
             Principal principal) {
         Project project = projectRepository.findById(id).orElseThrow();
-        // ゲストはdemoユーザーのプロジェクトのみ操作可能
-        if (principal == null) {
+        boolean guest = isGuest(principal);
+        if (guest) {
+            // ゲストはdemoユーザーのプロジェクトのみ操作可能
             if (!project.getUser().getUsername().equals("demo")) {
                 return "redirect:/dashboard";
             }
@@ -236,11 +245,13 @@ public class ProjectController {
         if (!project.getUser().getUsername().equals(principal.getName())) {
             return "redirect:/dashboard";
         }
+        // デモユーザーのプロジェクトは削除不可
+        if (project.getUser().getUsername().equals("demo")) {
+            return "redirect:/dashboard";
+        }
         projectRepository.delete(project);
         return "redirect:/dashboard";
     }
-
-    // 制作日誌部分
 
     // 日誌追加
     @PostMapping("/{id}/logs")
@@ -251,6 +262,10 @@ public class ProjectController {
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
             return "redirect:/dashboard";
+        }
+        // デモユーザーのプロジェクトは日誌追加不可
+        if (project.getUser().getUsername().equals("demo")) {
+            return "redirect:/projects/" + id;
         }
         ProjectLog log = new ProjectLog();
         log.setProject(project);
@@ -268,6 +283,10 @@ public class ProjectController {
         Project project = projectRepository.findById(id).orElseThrow();
         if (!project.getUser().getUsername().equals(principal.getName())) {
             return "redirect:/dashboard";
+        }
+        // デモユーザーのプロジェクトは日誌削除不可
+        if (project.getUser().getUsername().equals("demo")) {
+            return "redirect:/projects/" + id;
         }
         projectLogRepository.deleteById(logId);
         return "redirect:/projects/" + id;

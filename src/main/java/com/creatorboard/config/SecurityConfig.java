@@ -22,6 +22,7 @@ public class SecurityConfig {
                         // 静的リソース・認証画面・プロフィールは全員OK
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/", "/profile", "/login", "/signup").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/guest-login").permitAll()
 
                         // GETリクエスト（閲覧）は全員OK
                         .requestMatchers(HttpMethod.GET, "/dashboard").permitAll()

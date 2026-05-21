@@ -43,7 +43,7 @@ public class DashboardController {
                         @RequestParam(defaultValue = "0") int donePage) {
 
                 // ゲスト（未ログイン）はdemoユーザーのデータを表示
-                boolean isGuest = (principal == null);
+                boolean isGuest = (principal == null || principal.getName().equals("guest"));
                 String username = isGuest ? "demo" : principal.getName();
 
                 User user = userRepository.findByUsername(username).orElseThrow();

@@ -52,7 +52,6 @@ if (canvas) {
     const ctx = canvas.getContext('2d');
     let frame = 0;
 
-    // 複数の周波数成分をシミュレート
     const frequencies = [
         { freq: 0.008, amp: 35, phase: 0 },
         { freq: 0.015, amp: 20, phase: 1.2 },
@@ -85,7 +84,6 @@ if (canvas) {
             frequencies.forEach(function (f) {
                 y += Math.sin(x * f.freq + frame * 0.04 + f.phase) * f.amp;
             });
-            // ランダムなノイズを少し加えてリアルなスペクトラムっぽく
             y += (Math.random() - 0.5) * 3;
 
             if (x === 0) {
@@ -96,7 +94,7 @@ if (canvas) {
         }
         ctx.stroke();
 
-        // セカンダリ波形（薄く・少しずらす）
+        // セカンダリ波形
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(255, 137, 6, 0.25)';
         ctx.lineWidth = 1;
@@ -147,9 +145,7 @@ function filterProjects() {
         }
     });
 
-    // 各列の「プロジェクトなし」表示を更新
     document.querySelectorAll('.kanban-column').forEach(function (col) {
-        var visibleCards = col.querySelectorAll('.project-kanban-card[style="display: block;"], .project-kanban-card:not([style])');
         var emptyMsg = col.querySelector('.kanban-empty');
         if (emptyMsg) {
             var hasVisible = false;
@@ -196,8 +192,17 @@ document.querySelectorAll('.kanban-column').forEach(function (column) {
         var projectId = e.dataTransfer.getData('projectId');
         var newStatus = column.dataset.status;
 
-        var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        var csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+        var csrfMeta = document.querySelector('meta[name="_csrf"]');
+        var csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+
+        // CSRFトークンがない場合はログインページへ
+        if (!csrfMeta || !csrfHeaderMeta) {
+            location.href = '/login';
+            return;
+        }
+
+        var csrfToken = csrfMeta.getAttribute('content');
+        var csrfHeader = csrfHeaderMeta.getAttribute('content');
 
         fetch('/projects/' + projectId + '/status', {
             method: 'POST',
@@ -212,6 +217,7 @@ document.querySelectorAll('.kanban-column').forEach(function (column) {
     });
 });
 
+// フェードイン
 const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
         if (entry.isIntersecting) {
